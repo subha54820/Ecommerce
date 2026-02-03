@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+{% comment %} <div class="position-fixed top-0 start-0 w-100 h-100"
+     style="background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); z-index:-1;">
+</div> {% endcomment %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="card shadow-lg border-0 px-5 py-4"
+       style="
+         min-width: 400px;
+         max-width: 650px;
+         width: 100%;
+         background: rgba(255, 255, 255, 0.97);
+         border-radius: 28px;
+         box-shadow: 0 8px 64px 0 rgba(52,58,64,0.18), 0 1.5px 4px rgba(90,100,120,0.11);
+       ">
+
+    <h2 class="text-center fw-bold mb-4"
+        style="color: #725ac1; font-size: 2.2rem; letter-spacing: 0.5px;">
+      Sign Up
+    </h2>
+
+    <form action="/auth/signup/" method="post" autocomplete="off">
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold" for="email">Email</label>
+        <input type="email"
+               id="email"
+               name="email"
+               class="form-control p-3 shadow-sm"
+               placeholder="Enter your email"
+               style="font-size: 1.1rem; border-radius: 14px;"
+               required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold" for="pass1">Password</label>
+        <input type="password"
+               id="pass1"
+               name="pass1"
+               class="form-control p-3 shadow-sm"
+               placeholder="Enter password"
+               style="font-size: 1.1rem; border-radius: 14px;"
+               required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold" for="pass2">Confirm Password</label>
+        <input type="password"
+               id="pass2"
+               name="pass2"
+               class="form-control p-3 shadow-sm"
+               placeholder="Confirm password"
+               style="font-size: 1.1rem; border-radius: 14px;"
+               required>
+      </div>
+
+      <button class="btn w-100 py-3 fw-semibold"
+              style="
+                background: linear-gradient(90deg, #4f8cff, #6f42c1);
+                color: white;
+                font-size: 1.25rem;
+                border-radius: 14px;
+                box-shadow: 0 4px 16px 0 rgba(50,90,250,0.08);
+              ">
+        Sign Up
+      </button>
+
+      <div class="text-center mt-4">
+        <small class="fw-semibold">
+          Already a user?
+          <a href="/auth/login/" style="color:#4f8cff; text-decoration: none;">
+            Login
+          </a>
+        </small>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
