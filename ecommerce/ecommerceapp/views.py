@@ -16,11 +16,22 @@ def about(request):
 
 def home(request):
     query = request.GET.get('search')
+    filter_val = request.GET.get('filter')
+    
     if query:
         products = Product.objects.filter(name__icontains=query)
-    else:
+    elif filter_val and filter_val != 'all':
+        # Handled by Isotope in frontend, but good to filter backend too if needed
+        # Actually standard Isotope setup here uses data-filter, so view normally sends all.
+        # But per user request, we only want "Product" category on main home.
         products = Product.objects.all()
-        
+    else:
+        # Default homepage view: only show "Product" category
+        products = Product.objects.filter(category__name='Product')
+        if not products.exists():
+            # Fallback if category is empty
+            products = Product.objects.all()
+            
     categories = Category.objects.all()
     context = {
         'products': products,
