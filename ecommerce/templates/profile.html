@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Profile - E-commerce{% endblock title %}
+{% block hero %}{% endblock hero %}
+
+{% block body %}
+<div class="profile-wrapper" style="margin-top: 80px;">
+    <div class="container py-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <!-- Left Side: Profile Info -->
+            <div class="col-lg-5">
+                <div class="glass-card text-center mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="profile-avatar-large">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <h2 class="fw-bold mb-1">Hello, {{ user.username }}!</h2>
+                    <p class="text-muted small">{{ user.email }}</p>
+                    <div class="mt-3">
+                        <span class="welcome-badge" style="font-size: 11px; padding: 6px 15px;">Dhamaka Member</span>
+                    </div>
+                </div>
+
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
+                    {% if profile %}
+                    <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-white-50">
+                        <i class="bi bi-person-gear fs-4 text-primary me-2"></i>
+                        <h4 class="fw-bold mb-0">Account Settings</h4>
+                    </div>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label-ui">Phone Number</label>
+                            <input type="text" name="phone" class="form-control form-control-ui" value="{{ profile.phone }}" placeholder="+91 00000 00000">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label-ui">Default Shipping Address</label>
+                            <textarea name="address" class="form-control form-control-ui" rows="3" placeholder="Flat, House no., Building, Street...">{{ profile.address }}</textarea>
+                        </div>
+
+                        <div class="row mb-4 g-3">
+                            <div class="col-6">
+                                <label class="form-label-ui">City</label>
+                                <input type="text" name="city" class="form-control form-control-ui" value="{{ profile.city }}" placeholder="City">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-ui">State</label>
+                                <input type="text" name="state" class="form-control form-control-ui" value="{{ profile.state }}" placeholder="State">
+                            </div>
+                        </div>
+
+                        <div class="row mb-4 g-3">
+                            <div class="col-6">
+                                <label class="form-label-ui">Zipcode</label>
+                                <input type="text" name="zipcode" class="form-control form-control-ui" value="{{ profile.zipcode }}" placeholder="000000">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-ui">Country</label>
+                                <input type="text" name="country" class="form-control form-control-ui" value="{{ profile.country }}">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient w-100 py-3 shadow-sm mt-2">
+                            Update Details <i class="bi bi-check-circle ms-2"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="registration-container">
+                        <div class="mb-4 text-center">
+                            <span class="welcome-badge">Join Dhamaka Sale</span>
+                        </div>
+                        
+                        <div class="text-center mb-5">
+                            <h3 class="fw-bold mb-2">Create Your Profile</h3>
+                            <p class="text-muted">Join us today to manage your orders, track shipments, and enjoy a faster checkout experience.</p>
+                        </div>
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="form-label-ui">Email Address</label>
+                                <input type="email" name="email" class="form-control form-control-ui" placeholder="name@example.com" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label-ui">Password</label>
+                                <input type="password" name="pass1" class="form-control form-control-ui" placeholder="Min 6 characters" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label-ui">Confirm Password</label>
+                                <input type="password" name="pass2" class="form-control form-control-ui" placeholder="Repeat password" required>
+                            </div>
+                            
+                            <div class="mt-5">
+                                <button type="submit" class="btn btn-gradient w-100 py-3 shadow-sm">
+                                    Join Now <i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                            
+                            <p class="text-center mt-4 text-muted small">
+                                Already have an account? <a href="{% url 'handleLogin' %}" class="fw-bold text-primary">Login Here</a>
+                            </p>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Right Side: Order Insights & History -->
+            <div class="col-lg-7">
+                <div class="row mb-4 g-3" data-aos="fade-left" data-aos-delay="300">
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="p-2 bg-primary-subtle text-primary rounded-circle me-3">
+                                    <i class="bi bi-bag-check fs-4"></i>
+                                </div>
+                                <h6 class="fw-bold mb-0">Total Orders</h6>
+                            </div>
+                            <div class="d-flex align-items-end justify-content-between">
+                                <h2 class="fw-bold mb-0">{{ orders.count }}</h2>
+                                <span class="text-success small"><i class="bi bi-graph-up me-1"></i>Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="p-2 bg-info-subtle text-info rounded-circle me-3">
+                                    <i class="bi bi-clock-history fs-4"></i>
+                                </div>
+                                <h6 class="fw-bold mb-0">Recent Activity</h6>
+                            </div>
+                            <div class="d-flex align-items-end justify-content-between">
+                                <p class="text-muted small mb-0">Last order placed on {{ orders.0.created_at|date:"M d" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card h-100" data-aos="fade-left" data-aos-delay="400">
+                    <div class="d-flex align-items-center justify-content-between mb-5 pb-2 border-bottom border-white-50">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-box-seam fs-4 text-primary me-2"></i>
+                            <h4 class="fw-bold mb-0">Order History</h4>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-white-50 dropdown-toggle rounded-pill" type="button" data-bs-toggle="dropdown">
+                                Sort By
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Newest First</a></li>
+                                <li><a class="dropdown-item" href="#">Oldest First</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {% if orders %}
+                        <div class="pe-2" style="max-height: 800px; overflow-y: auto;">
+                        {% for order in orders %}
+                        <div class="glass-card shadow-sm p-4 mb-3 border-0 bg-white-50 order-card-premium">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold mb-1">#{{ order.order_number }}</h6>
+                                    <p class="text-muted small mb-0">{{ order.created_at|date:"M d, Y" }}</p>
+                                </div>
+                                <div class="col-md-3 text-md-center py-3 py-md-0">
+                                    <div class="fw-bold text-dark fs-5">₹{{ order.total_amount }}</div>
+                                    <div class="small text-muted">{{ order.items.count }} items</div>
+                                </div>
+                                <div class="col-md-5 text-md-end">
+                                    <span class="badge {% if order.status == 'delivered' %}bg-success{% elif order.status == 'pending' %}bg-warning{% else %}bg-primary{% endif %} rounded-pill px-3 py-2 mb-2 d-inline-block">{{ order.get_status_display }}</span>
+                                    <br>
+                                    <a href="{% url 'order_detail' order.id %}" class="btn btn-outline-primary btn-sm rounded-pill px-4">View Order</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="bi bi-cart-x display-1 text-primary opacity-25"></i>
+                            </div>
+                            <h3 class="fw-bold mb-2">No Orders Yet</h3>
+                            <p class="text-muted px-md-5 mb-4">It looks like you haven't placed any orders. Start exploring our collection today!</p>
+                            <a href="{% url 'index' %}" class="btn btn-gradient rounded-pill px-4 py-2">Start Shopping</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

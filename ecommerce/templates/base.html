@@ -56,45 +56,72 @@
     <link href="{% static '/assets/css/main.css' %}" rel="stylesheet" />
   </head>
 
-  <body class="bg-transparent">
+  <body>
     <!-- ======= Header ======= -->
     <header id="header" class="header d-flex align-items-center fixed-top">
       <div
         class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between"
       >
-        <h1 class="logo">
-          <a href="/">Shop Cart</a>
-          <sup><a href="index.html" class="logo"><img  src="{% static '/assets/img/cart-logo.svg' %}" alt=""></a></sup>
-
+        <h1 class="logo d-flex align-items-center">
+          <a href="/" class="d-flex align-items-center">
+            <i class="bi bi-bag-heart-fill me-2 text-primary" style="font-size: 1.2em;"></i>
+            <span>ShopEasy</span>
+          </a>
         </h1>
 
+
+        <div class="search-bar d-flex mx-auto position-relative" style="max-width: 500px; width: 100%;">
+          <form action="{% url 'index' %}" method="GET" class="w-100">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-0 ps-4 pe-0 rounded-start-pill shadow-sm">
+                <i class="bi bi-search text-primary"></i>
+              </span>
+              <input type="text" name="search" class="form-control border-0 px-3 py-2 shadow-sm rounded-0" placeholder="Search for products, brands and more..." style="background: white; font-size: 0.95rem;">
+              <button type="submit" class="btn btn-primary px-4 rounded-end-pill shadow-sm fw-bold">Search</button>
+            </div>
+          </form>
+        </div>
 
         <nav id="navmenu" class="navmenu">
           <ul>
             <li><a class="nav-link scrollto active" href="/">Home</a></li>
 
+            <li class="dropdown">
+              <a href="/#portfolio"
+                ><span>Categories</span>
+                <i class="bi bi-chevron-down"></i
+              ></a>
+              <ul>
+                <li><a href="/?filter=all#portfolio">All Products</a></li>
+                {% for cat in all_categories %}
+                <li><a href="/?filter={{ cat.name|slugify }}#portfolio">{{ cat.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+
             <li>
               <a class="nav-link scrollto" href="{% url 'about' %}">About</a>
             </li>
-            <li><a class="nav-link scrollto" href="/checkout">Checkout</a></li>
+
+
             <li>
               <a class="nav-link scrollto" href="/profile"
                 >My Profile<i class="fa-regular fa-square-user"></i>
               </a>
             </li>
-
             <button
               type="button"
-              class="nav-link scrollto bg-danger p-3 m-2 text-white"
+              class="btn btn-gradient ms-lg-3 my-2 shadow-sm d-flex align-items-center justify-content-center position-relative"
               id="popcart"
-              data-container="body"
-              data-toggle="popover"
-              data-placement="bottom"
-              data-html="true"
+              data-bs-container="body"
+              data-bs-toggle="popover"
+              data-bs-placement="bottom"
+              data-bs-html="true"
+              style="padding: 10px 25px;"
             >
-              <i class="fa-solid fa-cart-shopping"></i> Cart (<span id="cart"
-                >0</span
-              >)
+              <i class="bi bi-cart3 me-2 fs-5"></i> 
+              <span class="me-1">Cart</span>
+              <span id="cart" class="badge bg-white text-primary rounded-pill ms-1" style="font-size: 0.8rem; min-width: 20px;">{{ cart_count }}</span>
             </button>
 
             {% if request.user.is_authenticated %}
@@ -123,9 +150,9 @@
             {% endif %}
 
             <li>
-              <a class="nav-link scrollto bg-dark p-3 m-2" href="/contact"
-                >Contact <i class="fa-solid fa-message-middle"></i
-              ></a>
+              <a class="btn btn-gradient ms-lg-2 my-2 shadow-sm d-flex align-items-center justify-content-center" href="/contact" style="padding: 10px 20px;">
+                Contact <i class="bi bi-chat-dots ms-2"></i>
+              </a>
             </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
@@ -134,6 +161,7 @@
     </header>
     <!-- End Header -->
 
+    {% block hero %}
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="hero section dark-background">
       <img
@@ -146,72 +174,184 @@
       </div>
     </section>
     <!-- End Hero -->
+    {% endblock hero %}
 
     <main id="main">{% block body %} {% endblock body %}</main>
     <!-- End #main -->
-    <footer id="footer" class="footer dark-background">
+  <footer id="footer" class="footer">
 
     <div class="container footer-top">
       <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">Tempo</span>
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'index' %}" class="logo d-flex align-items-center">
+            <span class="sitename">ShopEasy</span>
           </a>
-          <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+          <div class="footer-contact pt-3">
+            <p>Your one-stop destination for premium products and seamless shopping experiences. Discover quality, style, and convenience all in one place.</p>
+            <div class="social-links d-flex mt-4">
+              <a href="https://github.com/subha54820" target="_blank" rel="noopener noreferrer"><i class="bi bi-github"></i></a>
+              <a href="https://www.linkedin.com/in/subhalaxmi-pradhan-77b7043a2?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
+            </div>
           </div>
         </div>
 
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Useful Links</h4>
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Quick Links</h4>
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'index' %}#portfolio">Products</a></li>
+            <li><a href="{% url 'cart' %}">Cart</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-6 footer-links">
+        <div class="col-lg-3 col-md-3 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
+            <li><a href="#">Online Shopping</a></li>
+            <li><a href="#">Secure Payment</a></li>
+            <li><a href="#">Fast Delivery</a></li>
+            <li><a href="#">Easy Returns</a></li>
+            <li><a href="#">24/7 Customer Support</a></li>
           </ul>
         </div>
 
         <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
           <h4>Contact Us</h4>
-          <p>A108 Adam Street</p>
-          <p>New York, NY 535022</p>
-          <p>United States</p>
-          <p class="mt-4"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-          <p><strong>Email:</strong> <span>info@example.com</span></p>
+          <p>Bhubaneswar, Odisha</p>
+          <p>India</p>
+          <p class="mt-4"><strong>Phone:</strong> <span>+91 99379 65555</span></p>
+          <p><strong>Email:</strong> <span>support@shopeasy.com</span></p>
         </div>
 
       </div>
     </div>
 
     <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">Tempo</strong> <span>All Rights Reserved</span></p>
+      <p>© 2026 <strong>ShopEasy</strong>. All Rights Reserved.</p>
       <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        Designed & Developed by <strong>Subhalaxmi Pradhan</strong>
       </div>
     </div>
 
   </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Popover
+        const popoverTriggerEl = document.getElementById('popcart');
+        const popover = new bootstrap.Popover(popoverTriggerEl, {
+            trigger: 'click',
+            html: true,
+            content: function() {
+                return '<div id="popover-content">Loading...</div>';
+            }
+        });
+
+        popoverTriggerEl.addEventListener('show.bs.popover', function () {
+            fetch('{% url "get_cart_items" %}')
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<div class="mini-cart">';
+                    if (data.items.length === 0) {
+                        html += '<p class="text-center p-3 mb-0 text-muted">Your cart is empty</p>';
+                    } else {
+                        data.items.slice(0, 5).forEach(item => {
+                            html += `
+                            <div class="d-flex align-items-center mb-3 p-2 bg-light rounded-3 transition-all hover-shadow-sm">
+                                <img src="${item.image}" style="width: 45px; height: 45px; object-fit: cover;" class="rounded shadow-sm me-3">
+                                <div class="flex-grow-1">
+                                    <div class="small fw-bold text-dark text-truncate" style="max-width: 140px;">${item.name}</div>
+                                    <div class="small text-muted">${item.quantity} x ₹${item.price}</div>
+                                </div>
+                            </div>`;
+                        });
+                        if (data.items.length > 5) {
+                            html += `<div class="text-center small text-muted mb-2">+ ${data.items.length - 5} more items</div>`;
+                        }
+                        html += `
+                        <div class="d-flex justify-content-between fw-bold mb-3">
+                            <span>Total:</span>
+                            <span>₹${data.total_price}</span>
+                        </div>
+                        <a href="{% url 'cart' %}" class="btn btn-primary btn-sm w-100 rounded-pill mb-2">View Cart</a>
+                        <a href="{% url 'checkout' %}" class="btn btn-gradient btn-sm w-100 rounded-pill">Checkout</a>`;
+                    }
+                    html += '</div>';
+                    
+                    const popoverContent = document.querySelector('.popover-body');
+                    if (popoverContent) {
+                        popoverContent.innerHTML = html;
+                    }
+                });
+        });
+
+        // Close popover when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!popoverTriggerEl.contains(e.target) && !document.querySelector('.popover')?.contains(e.target)) {
+                popover.hide();
+            }
+        });
+
+        // AJAX Add to Cart
+        window.addToCart = function(e, url, qty = 1) {
+            if (e) e.preventDefault();
+            
+            const finalUrl = url + (url.includes('?') ? '&' : '?') + 'qty=' + qty;
+            
+            fetch(finalUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update header count
+                    document.getElementById('cart').innerText = data.cart_count;
+                    
+                    // Show success toast or message
+                    const toastMsg = document.createElement('div');
+                    toastMsg.className = 'position-fixed bottom-0 end-0 p-3';
+                    toastMsg.style.zIndex = '1060';
+                    toastMsg.innerHTML = `
+                        <div class="toast show align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <i class="bi bi-check-circle me-2"></i> ${data.message}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(toastMsg);
+                    setTimeout(() => toastMsg.remove(), 3000);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = url; // Fallback to normal redirect
+            });
+            
+            return false;
+        };
+    });
+  </script>
 
   </body>
 </html>

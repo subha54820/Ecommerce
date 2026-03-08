@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Checkout - E-commerce{% endblock %}
+{% block hero %}{% endblock hero %}
+
+{% block body %}
+<div class="container" style="margin-top: 120px; margin-bottom: 60px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row g-5">
+        <!-- Checkout Form -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 p-md-5">
+                <h2 class="fw-bold mb-4">Shipping Details</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label-ui">Full Address</label>
+                            <textarea name="address" class="form-control form-control-ui" rows="3" required placeholder="1234 Main St">{{ profile.address }}</textarea>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label-ui">City</label>
+                            <input type="text" name="city" class="form-control form-control-ui" value="{{ profile.city }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-ui">State</label>
+                            <input type="text" name="state" class="form-control form-control-ui" value="{{ profile.state }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-ui">Zip Code</label>
+                            <input type="text" name="zipcode" class="form-control form-control-ui" value="{{ profile.zipcode }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-ui">Phone Number</label>
+                            <input type="text" name="phone" class="form-control form-control-ui" value="{{ profile.phone }}" required>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <h4 class="fw-bold mb-3">Payment Method</h4>
+                            <div class="form-check p-3 bg-light rounded-3 border mb-2">
+                                <input class="form-check-input" type="radio" name="payment_method" value="cod" id="cod" checked>
+                                <label class="form-check-label fw-bold" for="cod">
+                                    Cash on Delivery
+                                </label>
+                            </div>
+                            <!-- Placeholder for other methods -->
+                            <div class="form-check p-3 bg-light rounded-3 border opacity-50">
+                                <input class="form-check-input" type="radio" name="payment_method" value="card" id="card" disabled>
+                                <label class="form-check-label" for="card">
+                                    Credit/Debit Card (Coming Soon)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-gradient w-100 py-3 mt-4 shadow-sm fw-bold">Place Order <i class="bi bi-bag-check ms-2"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+            <div class="glass-card p-4">
+                <h3 class="fw-bold mb-4">Your Order</h3>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">Total Items</span>
+                    <span class="badge bg-primary rounded-pill">{{ cart_items|length }}</span>
+                </div>
+                
+                <div class="list-group mb-3 glass-card bg-transparent border-0 p-0 shadow-none">
+                    {% for item in cart_items %}
+                    <div class="list-group-item d-flex justify-content-between lh-sm bg-transparent border-bottom">
+                        <div>
+                            <h6 class="my-0">{{ item.product.name }}</h6>
+                            <small class="text-muted">Qty: {{ item.quantity }} x ₹{{ item.product.price }}</small>
+                        </div>
+                        <span class="text-muted">₹{{ item.subtotal }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span>
+                    <strong>₹{{ cart.total_price }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-4">
+                    <span>Shipping</span>
+                    <span class="text-success">Free</span>
+                </div>
+                
+                <div class="alert alert-info rounded-3 text-center small">
+                    <i class="bi bi-shield-check me-1"></i> Secure Checkout
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

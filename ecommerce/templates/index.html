@@ -2,127 +2,326 @@
 {% load static %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-  <h1>Welcome to Dhamaka Sale</h1>
+  <style>
+    .minimal-overlay-hero {
+      position: relative;
+      width: 100%;
+      height: 90vh;
+      min-height: 650px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+      overflow: hidden;
+      margin-bottom: 50px;
+    }
+
+    /* Attractive Professional Overlay */
+    .minimal-overlay-hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+      z-index: 1;
+    }
+
+    .hero-content-minimal {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 20px;
+      max-width: 1100px;
+    }
+
+    /* Main Welcome Text Styling */
+    .hero-welcome-text {
+      color: #fbbf24; /* Base Gold */
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+      cursor: default;
+      animation: colorCycle 5s ease-in-out infinite alternate;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes colorCycle {
+      0% { color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.3); }
+      50% { color: #fbbf24; text-shadow: 0 0 25px rgba(251, 191, 36, 0.6); }
+      100% { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+    }
+
+    .hero-title-max {
+      font-size: clamp(3.5rem, 10vw, 7.5rem);
+      font-weight: 900;
+      letter-spacing: -4px;
+      line-height: 0.9;
+      margin-bottom: 40px;
+      text-shadow: 0 15px 50px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    /* Dhamaka Offer Text Styling */
+    .dhamaka-span-vibrant {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b, #f6d365, #ff416c);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      animation: 
+        vibrant-pulse 3s ease-in-out infinite alternate, 
+        moveGradient 6s linear infinite,
+        textShine 4s linear infinite;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: crosshair;
+      position: relative;
+    }
+
+    /* Automatic Shine Effect */
+    .dhamaka-span-vibrant::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-20deg);
+      animation: automaticShine 3s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes automaticShine {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    @keyframes moveGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .dhamaka-span-vibrant:hover {
+      transform: scale(1.08) rotate(-1deg);
+      filter: drop-shadow(0 0 40px rgba(255, 0, 123, 1));
+    }
+
+    @keyframes vibrant-pulse {
+      from { filter: drop-shadow(0 0 10px rgba(255,77,0,0.5)); transform: scale(1); }
+      to { filter: drop-shadow(0 0 30px rgba(255,0,123,0.8)); transform: scale(1.03); }
+    }
+
+    .hero-subtitle-max {
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.95);
+      max-width: 900px;
+      margin: 0 auto 55px;
+      line-height: 1.5;
+      letter-spacing: 1px;
+    }
+
+    /* Premium Reveal Animation */
+    .premium-reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      filter: blur(15px);
+      animation: heroEntrance 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    .delay-1 { animation-delay: 0.3s; }
+    .delay-2 { animation-delay: 0.6s; }
+    .delay-3 { animation-delay: 0.9s; }
+
+    @keyframes heroEntrance {
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    /* Attractive Action Button */
+    .btn-hero-premium {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: #fff;
+      padding: 22px 70px;
+      border: none;
+      border-radius: 100px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      font-size: 1.1rem;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-block;
+      box-shadow: 0 20px 40px rgba(255, 65, 108, 0.4);
+      text-decoration: none;
+    }
+
+    .btn-hero-premium:hover {
+      transform: scale(1.15) translateY(-8px);
+      box-shadow: 0 30px 60px rgba(255, 65, 108, 0.6);
+      color: #fff;
+      background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    }
+  </style>
+
+  <div class="minimal-overlay-hero">
+    <div class="hero-content-minimal">
+      <h1 class="hero-title-max premium-reveal delay-1">
+        <span class="hero-welcome-text">Welcome to Our</span>
+        <span class="dhamaka-span-vibrant">Dhamaka Offer</span>
+      </h1>
+      <p class="hero-subtitle-max premium-reveal delay-2">
+        Discover the redefined shopping experience with ShopEasy. <br> 
+        Premium quality, unbeatable prices, and lightning-fast delivery!
+      </p>
+      <div class="premium-reveal delay-3">
+        <a href="#portfolio" class="btn-hero-premium">
+          Shop Now <i class="bi bi-arrow-right ms-2 fs-4"></i>
+        </a>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
 {% block body %}
-   <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio section">
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section" style="padding: 80px 0;">
 
       <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Portfolio</h2>
-        <p><span>Check Our</span> <span class="description-title">Portfolio</span></p>
-        <h5>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates alias officiis, nihil deleniti est temporibus tempora minus ipsam error? </h5>
+      <div class="container section-title text-center" data-aos="fade-up">
+        <span class="welcome-badge">Explore Our Store</span>
+        {% if search_query %}
+          <h2 class="display-4 fw-bold mt-3">Search Results for "{{ search_query }}"</h2>
+          <p class="text-muted"><a href="{% url 'index' %}" class="text-primary">Clear search</a></p>
+        {% else %}
+          <h2 class="display-4 fw-bold mt-3">Premium Collection</h2>
+          <p class="text-muted mx-auto" style="max-width: 700px;">Explore our curated selection of high-quality products, carefully chosen to bring you the best in style, function, and value.</p>
+        {% endif %}
       </div><!-- End Section Title -->
 
       <div class="container">
 
-        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+        <div class="isotope-layout text-center" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
           <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-app">App</li>
-            <li data-filter=".filter-product">Card</li>
-            <li data-filter=".filter-branding">Web</li>
+            <li data-filter="*" class="filter-active">All Products</li>
+            {% for cat in all_categories %}
+            <li data-filter=".filter-{{ cat.name|slugify }}">{{ cat.name }}</li>
+            {% endfor %}
           </ul><!-- End Portfolio Filters -->
 
-          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+          <div class="row gy-5 isotope-container text-start" data-aos="fade-up" data-aos-delay="200">
 
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-1.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>App 1</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-1.jpg' %}" title="App 1" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item isotope-item filter-{{ product.category.name|slugify }} mb-4">
+              <div class="card h-100 border-0 glass-card product-card">
+                <div class="position-relative overflow-hidden rounded-top-4">
+                  <a href="{% url 'product_detail' product.id %}">
+                    {% if product.image %}
+                      <div class="product-img-container position-relative overflow-hidden">
+                        <img src="{{ product.image.url }}" class="card-img-top w-100 transition-transform duration-500 hover-scale-110" alt="{{ product.name }}" style="height: 300px; object-fit: cover;">
+                        <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 bg-black/20 opacity-0 hover-opacity-100 transition-opacity"></div>
+                      </div>
+                    {% else %}
+                      <div class="bg-light d-flex align-items-center justify-content-center card-img-top" style="height: 300px;">
+                        <i class="bi bi-image text-muted fs-1 opacity-25"></i>
+                      </div>
+                    {% endif %}
+                  </a>
+                  {% if product.featured %}
+                  <span class="position-absolute top-0 end-0 m-3 welcome-badge" style="padding: 5px 12px; font-size: 10px;">FEATURED</span>
+                  {% endif %}
+                </div>
+                
+                <div class="card-body text-center d-flex flex-column p-4">
+                  <span class="text-primary small fw-bold mb-1 text-uppercase tracking-wider">{{ product.category.name }}</span>
+                  <h5 class="card-title fw-bold text-dark mb-2">
+                    <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">{{ product.name }}</a>
+                  </h5>
+                  <p class="card-text text-muted small mb-4 flex-grow-1">{{ product.description|truncatechars:60 }}</p>
+                  
+                  <div class="mt-auto pt-3 border-top border-white-50">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="fs-4 fw-bold text-dark">₹{{ product.price }}</span>
+                        <span class="badge {% if product.stock > 10 %}bg-success-subtle text-success{% elif product.stock > 0 %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-3">
+                            {% if product.stock > 0 %}In Stock{% else %}Out of Stock{% endif %}
+                        </span>
+                    </div>
+                    {% if product.stock > 0 %}
+                       <a href="{% url 'add_to_cart' product.id %}" onclick="return addToCart(event, '{% url 'add_to_cart' product.id %}')" class="btn btn-gradient w-100 shadow-sm py-2">
+                        <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                      </a>
+                    {% else %}
+                      <button class="btn btn-secondary w-100 py-2 border-0 opacity-50" disabled>Out of Stock</button>
+                    {% endif %}
+                  </div>
+                </div>
               </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-2.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>Product 1</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-2.jpg' %}" title="Product 1" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+            </div><!-- End Product Item -->
+            {% empty %}
+            <div class="col-12 text-center py-5">
+              <div class="empty-state-card" data-aos="zoom-in">
+                <div class="mb-4">
+                  <i class="bi bi-box-seam display-1 text-primary opacity-25"></i>
+                </div>
+                <h3 class="fw-bold mb-3">No products found.</h3>
+                <p class="text-muted mb-4 px-md-5">We're currently preparing our new collection. Please check back later for amazing deals and premium products!</p>
+                <div class="welcome-badge">Stay Tuned for Dhamaka Sale!</div>
               </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-3.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>Branding 1</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-3.jpg' %}" title="Branding 1" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-4.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>App 2</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-4.jpg' %}" title="App 2" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-5.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>Product 2</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-5.jpg' %}" title="Product 2" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-6.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>Branding 2</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-6.jpg' %}" title="Branding 2" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-7.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>App 3</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-7.jpg' %}" title="App 3" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-8.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>Product 3</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-8.jpg' %}" title="Product 3" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <img src="{% static 'assets/img/masonry-portfolio/masonry-portfolio-9.jpg' %}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h4>Branding 3</h4>
-                <p>Lorem ipsum, dolor sit</p>
-                <a href="{% static 'assets/img/masonry-portfolio/masonry-portfolio-9.jpg' %}" title="Branding 2" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div>
-            </div><!-- End Portfolio Item -->
+            </div>
+            {% endfor %}
 
           </div><!-- End Portfolio Container -->
+
 
         </div>
 
       </div>
 
     </section><!-- /Portfolio Section -->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle Category Filtering from URL Query Params
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterParam = urlParams.get('filter');
+        
+        if (filterParam) {
+          const filterValue = filterParam === 'all' ? '*' : `.filter-${filterParam}`;
+          
+          // Wait for Isotope to be initialized (AOS/Isotope usually init via main.js)
+          // We'll use a small timeout to ensure Isotope is ready
+          setTimeout(() => {
+            const isotopeContainer = document.querySelector('.isotope-container');
+            if (isotopeContainer) {
+              const iso = new Isotope(isotopeContainer, {
+                itemSelector: '.portfolio-item',
+                layoutMode: 'masonry'
+              });
+              
+              iso.arrange({ filter: filterValue });
+
+              // Update active class on filter buttons
+              const filterBtns = document.querySelectorAll('.portfolio-filters li');
+              filterBtns.forEach(btn => {
+                btn.classList.remove('filter-active');
+                if (btn.getAttribute('data-filter') === filterValue) {
+                  btn.classList.add('filter-active');
+                }
+              });
+
+              // Smooth Scroll to portfolio section
+              const portfolioSection = document.getElementById('portfolio');
+              if (portfolioSection) {
+                portfolioSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }
+          }, 500);
+        }
+      });
+    </script>
 {% endblock body %}

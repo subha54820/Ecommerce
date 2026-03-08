@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'authcart',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,6 +63,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ecommerceapp.context_processors.all_categories',
+                'ecommerceapp.context_processors.cart_count',
             ],
         },
     },
@@ -116,14 +117,20 @@ USE_TZ = True
 
 # sending emails
 
-EMAIL_HOST = 'smtp.secureserver.net'
-EMAIL_HOST_USER = 'dashsantosh2004@gmail.com'
-EMAIL_HOST_PASSWORD = 'your email password'
+# sending emails
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'pradhan.subhalaxmi917@gmail.com'  # This needs a real password or app password
+EMAIL_HOST_PASSWORD = 'subha@1234' # User needs to provide this or use app password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+OWNER_EMAIL = 'pradhan.subhalaxmi917@gmail.com'
 
 
+# Authentication URLs
+LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -133,7 +140,12 @@ STATICFILES_DIRS=[
 os.path.join(BASE_DIR,'static')
 ]
 
+# Media files (Uploaded files like product images)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

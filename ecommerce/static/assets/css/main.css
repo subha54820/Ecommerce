@@ -1,43 +1,92 @@
 
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Nunito",  sans-serif;
-  --nav-font: "Poppins",  sans-serif;
-}
+  /* Fonts */
+  --default-font: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --heading-font: "Poppins", sans-serif;
+  --nav-font: "Poppins", sans-serif;
 
-/* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root {
-  --background-color: #ffffff; /* Background color for the entire website , including individual sections */
-  --default-color: #444444; /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #493c3e; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #e43c5c; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-  --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-  --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
-}
+  /* Premium Glass Palette with Animation */
+  --bg-color-1: #fdfbfb;
+  --bg-color-2: #ebedee;
+  --bg-color-3: #e0e7ff; /* Soft indigo tint */
+  --background-gradient: linear-gradient(-45deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3), var(--bg-color-2));
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-card-bg: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --glass-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-/* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
-:root {
-  --nav-color: #ffffff;  /* The default color of the main navmenu links */
-  --nav-hover-color: #e43c5c; /* Applied to main navmenu links when they are hovered over or active */
-  --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #444444; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #e43c5c; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
-}
+  --accent-color: #4f46e5; /* Indigo/Purple Modern */
+  --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --secondary-color: #ec4899; /* Pink/Rose for calls to action */
+  
+  --text-main: #0f172a; /* Slate 900 */
+  --text-muted: #475569; /* Slate 600 */
+  --text-light: #f8fafc; /* Slate 50 */
 
-/* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
-
-.light-background {
-  --background-color: #f9f9f9;
+  /* Map to existing vars */
+  --background-color: transparent; 
+  --default-color: var(--text-main);
+  --heading-color: #1e293b; /* Slate 800 */
   --surface-color: #ffffff;
+  --contrast-color: #ffffff;
+  --nav-color: var(--text-main);
+  --nav-hover-color: var(--accent-color);
+  --nav-dropdown-background-color: rgba(255, 255, 255, 0.95);
+  --nav-dropdown-color: var(--text-main);
+  --nav-dropdown-hover-color: var(--accent-color);
 }
 
+/* Glassmorphism Utilities */
+.glass-card {
+    background: var(--glass-card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 30px;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
+}
+
+.glass-header {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-gradient {
+    background: var(--accent-gradient);
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); 
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+}
+
+/* Dark Mode Overrides (Optional Toggle later) */
 .dark-background {
-  --background-color: #060606;
-  --default-color: #ffffff;
-  --heading-color: #ffffff;
-  --surface-color: #252525;
+  --background-color: #0f172a;
+  --default-color: #e2e8f0;
+  --heading-color: #f8fafc;
+  --surface-color: #1e293b;
   --contrast-color: #ffffff;
+  background-color: var(--background-color) !important; /* Force dark bg if class present */
 }
 
 /* Smooth scroll */
@@ -45,13 +94,296 @@
   scroll-behavior: smooth;
 }
 
+/* Profile Page Specifics */
+.profile-wrapper {
+    padding-top: 50px;
+    min-height: 100vh;
+}
+/* About Page Icon Box */
+.icon-box {
+    padding: 30px;
+    background: var(--glass-card-bg);
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.3s ease-in-out;
+}
+
+.icon-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.icon-box i {
+    font-size: 48px;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.card-img-top {
+    width: 80px;
+    height: 80px;
+    background: var(--accent-gradient);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+}
+.form-label-ui {
+    font-weight: 600;
+    color: var(--heading-color);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+.form-control-ui {
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.5);
+    padding: 12px 16px;
+    transition: all 0.3s;
+}
+.form-control-ui:focus {
+    border-color: var(--accent-color);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    outline: none;
+}
+.order-row-ui {
+    background: rgba(255,255,255,0.5);
+    border-radius: 15px;
+    margin-bottom: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+.order-row-ui:hover {
+    background: rgba(255,255,255,0.8);
+}
+
+.profile-avatar-large {
+    width: 100px;
+    height: 100px;
+    background: var(--accent-gradient);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: 800;
+    margin: 0 auto 20px;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    border: 4px solid white;
+    transition: transform 0.3s ease;
+}
+
+.profile-avatar-large:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    padding: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.order-card-premium {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.order-card-premium:hover {
+    transform: scale(1.02) translateX(5px);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12) !important;
+}
+
+.order-card-premium .badge {
+    transition: transform 0.3s ease;
+}
+
+.order-card-premium:hover .badge {
+    transform: scale(1.1);
+}
+
+/* Product Card Glassmorphism */
+.product-card {
+    border-radius: 20px !important;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+}
+
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.product-card img {
+    transition: transform 0.6s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.1);
+}
+
+/* Portfolio Filters */
+.portfolio-filters {
+    padding: 0;
+    margin: 0 auto 40px auto;
+    list-style: none;
+    text-align: center;
+    background: var(--glass-card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    display: inline-flex;
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: var(--glass-shadow);
+}
+
+.portfolio-filters li {
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0 2px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 30px;
+    color: var(--text-muted);
+}
+
+.portfolio-filters li.filter-active,
+.portfolio-filters li:hover {
+    background: var(--accent-gradient);
+    color: #fff;
+}
+
+/* Empty State Card */
+.empty-state-card {
+    background: var(--glass-card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 60px 40px;
+    box-shadow: var(--glass-shadow);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Registration Form Enhancements */
+.registration-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.welcome-badge {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+}
+
+.rounded-start-ui {
+    border-top-left-radius: 12px !important;
+    border-bottom-left-radius: 12px !important;
+}
+
+.rounded-end-ui {
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+}
+
+.form-icon-header {
+    font-size: 40px;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+}
+.badge-custom {
+    padding: 6px 16px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
 /*--------------------------------------------------------------
 # General Styling & Shared Classes
 --------------------------------------------------------------*/
+/* Global Card Styling Override */
+.card {
+    background: var(--glass-card-bg)!important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border)!important;
+    border-radius: 20px!important;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+    border-bottom: 1px solid var(--glass-border);
+}
+
 body {
   color: var(--default-color);
-  background-color: var(--background-color);
+  background-image: var(--background-gradient); 
+  background-attachment: fixed;
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   font-family: var(--default-font);
+  overflow-x: hidden; 
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes shine {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.text-shine {
+    background: linear-gradient(to right, #fff 20%, #4f46e5 40%, #4f46e5 60%, #fff 80%);
+    background-size: 200% auto;
+    color: #fff;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 4s linear infinite;
+    text-shadow: none !important; /* Override shadow for shine to work */
 }
 
 a {
@@ -137,14 +469,23 @@ h6 {
 # Global Header
 --------------------------------------------------------------*/
 .header {
-  --background-color: rgba(255, 255, 255, 0);
-  --default-color: #ffffff;
-  --heading-color: #ffffff;
+  --background-color: rgba(255, 255, 255, 0.1); /* Start mostly transparent */
+  --default-color: var(--text-main); /* Changed to dark text initially for light implementation */
+  --heading-color: var(--text-main);
   color: var(--default-color);
   background-color: var(--background-color);
+  backdrop-filter: blur(5px); /* Subtle blur initially */
   padding: 20px 0;
   transition: all 0.5s;
   z-index: 997;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Soft shadow */
+}
+
+.header.scrolled, 
+.header.sticky-top { /* Ensure sticky header gets glass effect */
+    --background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .header .logo {
@@ -171,7 +512,9 @@ h6 {
 /* Global Header on Scroll
 ------------------------------*/
 .scrolled .header {
-  --background-color: rgba(0, 0, 0, 0.8);
+  --background-color: rgba(255, 255, 255, 0.9);
+  --default-color: var(--text-main);
+  --heading-color: var(--text-main);
 }
 
 /*--------------------------------------------------------------
@@ -439,16 +782,20 @@ h6 {
 # Global Footer
 --------------------------------------------------------------*/
 .footer {
-  color: var(--default-color);
-  background-color: var(--background-color);
+  color: #f8fafc;
+  background: rgba(15, 23, 42, 0.9); /* Dark Glass */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   font-size: 14px;
   padding-bottom: 50px;
   position: relative;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .footer .footer-top {
   padding-top: 50px;
-  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border-top: none;
 }
 
 .footer .footer-about .logo {
@@ -527,9 +874,10 @@ h6 {
 }
 
 .footer .footer-links ul a {
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: rgba(255, 255, 255, 0.7);
   display: inline-block;
   line-height: 1;
+  transition: 0.3s;
 }
 
 .footer .footer-links ul a:hover {
@@ -543,7 +891,8 @@ h6 {
 .footer .copyright {
   padding-top: 25px;
   padding-bottom: 25px;
-  background-color: color-mix(in srgb, var(--default-color), transparent 95%);
+  background-color: rgba(15, 23, 42, 0.95);
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
 .footer .copyright p {
@@ -761,7 +1110,7 @@ section,
 
 .hero:before {
   content: "";
-  background: color-mix(in srgb, var(--background-color), transparent 30%);
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.8)); /* Radiant dark overlay */
   position: absolute;
   inset: 0;
   z-index: 2;
