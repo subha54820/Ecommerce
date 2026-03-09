@@ -418,9 +418,34 @@ def product_detail(request, product_id):
     # Get reviews
     reviews = product.reviews.all()
     
+    in_cart = False
+    if request.user.is_authenticated:
+        cart_exists = CartItem.objects.filter(cart__user=request.user, product=product).exists()
+        if cart_exists:
+            in_cart = True
+            
     context = {
         'product': product,
         'related_products': related_products,
         'reviews': reviews,
+        'in_cart': in_cart,
     }
     return render(request, "product_detail.html", context)
+
+def search_suggestions(request):
+    query = request.GET.get('q', '')
+    if len(query) < 2:
+        return JsonResponse({'suggestions': []})
+    
+    products = Product.objects.filter(name__icontains=query)[:5]
+    suggestions = []
+    for product in products:
+        suggestions.append({
+            'id': product.id,
+            'name': product.name,
+            'price': float(product.price),
+            'image': product.image.url if product.image else '',
+            'url': f"/product/{product.id}/"
+        })
+    
+    return JsonResponse({'suggestions': suggestions})

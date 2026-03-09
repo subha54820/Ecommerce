@@ -4,6 +4,7 @@ from ecommerceapp import views
 
 urlpatterns = [
     path('',views.home,name="index"),
+    path('home',views.home,name="home"),
     path('contact',views.contact, name="contact"),
     path('about/',views.about, name="about"),
     
@@ -22,4 +23,5 @@ urlpatterns = [
     path('order/<int:order_id>/', views.order_detail, name="order_detail"),
     path('orders/', views.order_history, name="order_history"),
     path('product/<int:product_id>/', views.product_detail, name="product_detail"),
+    path('search-suggestions/', views.search_suggestions, name="search_suggestions"),
 ]

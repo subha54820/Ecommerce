@@ -10,50 +10,40 @@
         padding-bottom: 80px;
     }
     
-    .glass-card {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-    }
-    
-    .product-gallery {
-        position: sticky;
-        top: 100px;
-    }
-    
     .main-img-container {
         position: relative;
         overflow: hidden;
         border-radius: 15px;
-        cursor: zoom-in;
+        cursor: crosshair;
+        background: var(--surface-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 500px;
     }
     
     .main-img-container img {
-        transition: transform 0.5s ease;
-        width: 100%;
-        height: 500px;
-        object-fit: cover;
-    }
-    
-    .main-img-container:hover img {
-        transform: scale(1.5);
+        transition: transform 0.1s ease-out;
+        max-width: 100%;
+        max-height: 500px;
+        object-fit: contain;
     }
     
     .thumbnail-img {
         width: 80px;
         height: 80px;
         object-fit: cover;
-        border-radius: 10px;
+        border-radius: 12px;
         cursor: pointer;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
+        border: 2px solid var(--glass-border);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: var(--surface-color);
     }
     
     .thumbnail-img:hover, .thumbnail-img.active {
-        border-color: #ff416c;
-        transform: translateY(-5px);
+        border-color: var(--accent-color);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
     .product-info-sticky {
@@ -62,52 +52,34 @@
     }
     
     .price-tag {
-        font-size: 2.5rem;
+        font-size: 3rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        background: var(--accent-gradient);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         display: inline-block;
     }
     
-    .btn-gradient {
-        background: linear-gradient(135deg, #ff416c, #ff4b2b);
-        color: #fff;
-        border: none;
-        padding: 15px 30px;
-        border-radius: 50px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
-    }
-    
-    .btn-gradient:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(255, 65, 108, 0.4);
-        color: #fff;
-    }
-    
     .related-product-card {
-        transition: all 0.3s ease;
-        border-radius: 15px;
+        background: var(--glass-card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border-radius: 20px;
         overflow: hidden;
     }
     
     .related-product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     }
 
-    /* Zoom behavior script positioning */
-    #zoom-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        display: none;
+    body.dark-mode .breadcrumb-item a {
+        color: var(--text-muted);
+    }
+    
+    body.dark-mode .breadcrumb-item.active {
+        color: var(--text-light);
     }
 </style>
 
@@ -150,7 +122,7 @@
                     </ol>
                 </nav>
                 
-                <h1 class="display-5 fw-bold text-dark mb-3">{{ product.name }}</h1>
+                <h1 class="display-5 fw-bold mb-3" style="color: var(--heading-color);">{{ product.name }}</h1>
                 
                 <div class="d-flex align-items-center mb-4">
                     <div class="price-tag me-4">₹{{ product.price }}</div>
@@ -178,7 +150,7 @@
                         </div>
                         <div class="col-md-6 text-md-end mt-3 mt-md-0">
                             <div class="small text-muted mb-1">Total Price</div>
-                            <div class="h4 fw-bold text-dark mb-0">₹<span id="dynamic-total">{{ product.price }}</span></div>
+                            <div class="h4 fw-bold mb-0" style="color: var(--heading-color);">₹<span id="dynamic-total">{{ product.price }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -193,9 +165,6 @@
                     {% else %}
                     <button class="btn btn-secondary btn-lg flex-grow-1" disabled>Out of Stock</button>
                     {% endif %}
-                    <button class="btn btn-outline-dark btn-lg px-4 rounded-pill">
-                        <i class="bi bi-heart"></i>
-                    </button>
                 </div>
 
                 <script>
@@ -217,14 +186,14 @@
                 
                 <div class="mt-5">
                     <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-truck text-primary fs-4 me-3"></i>
+                        <i class="bi bi-truck fs-4 me-3" style="color: var(--accent-color);"></i>
                         <div>
                             <h6 class="mb-0 fw-bold">Free Shipping</h6>
                             <p class="small text-muted mb-0">On orders over ₹999</p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center">
-                        <i class="bi bi-shield-check text-primary fs-4 me-3"></i>
+                        <i class="bi bi-shield-check fs-4 me-3" style="color: var(--accent-color);"></i>
                         <div>
                             <h6 class="mb-0 fw-bold">Secure Payment</h6>
                             <p class="small text-muted mb-0">100% secure payment processing</p>
@@ -244,7 +213,7 @@
                 <div class="glass-card p-4 mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="d-flex align-items-center">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <div class="text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: var(--accent-color);">
                                 {{ review.user.username|slice:":1"|upper }}
                             </div>
                             <div>
@@ -358,5 +327,6 @@
         img.style.transformOrigin = "center";
         img.style.transform = "scale(1)";
     });
+
 </script>
 {% endblock content %}

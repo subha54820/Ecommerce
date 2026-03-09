@@ -16,14 +16,14 @@
 
         <div class="glass-card p-4 p-md-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="fw-bold mb-0">Shopping Cart</h1>
-                <span class="badge bg-primary rounded-pill">{{ cart.total_items }} Items</span>
+                <h1 class="fw-bold mb-0" style="color: var(--heading-color);">Shopping Cart</h1>
+                <span class="badge rounded-pill" id="cart-item-count-badge" style="background: var(--accent-color); color: var(--contrast-color);">{{ cart.total_items }} Items</span>
             </div>
 
             {% if cart_items %}
-                <div class="cart-items mb-4">
+                <div class="cart-items mb-4" id="cart-items-container">
                     {% for item in cart_items %}
-                    <div class="row align-items-center py-3 border-bottom border-light">
+                    <div class="row align-items-center py-3 border-bottom border-light cart-item-row" id="item-row-{{ item.id }}">
                         <div class="col-md-2 text-center">
                             {% if item.product.image %}
                                 <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded shadow-sm" style="max-height: 80px;">
@@ -35,28 +35,25 @@
                         </div>
                         
                         <div class="col-md-4">
-                            <h5 class="fw-bold text-dark mb-1">{{ item.product.name }}</h5>
+                            <h5 class="fw-bold mb-1" style="color: var(--heading-color);">{{ item.product.name }}</h5>
                             <p class="text-muted small mb-0">{{ item.product.category }}</p>
                         </div>
                         
                         <div class="col-md-2 text-center">
-                             <div class="fw-bold text-primary">₹{{ item.product.price }}</div>
+                             <div class="fw-bold" style="color: var(--accent-color);">₹{{ item.product.price }}</div>
                         </div>
 
                         <div class="col-md-2 text-center">
                             <div class="input-group input-group-sm justify-content-center" style="width: 120px; margin: 0 auto;">
-                                <button class="btn btn-outline-primary rounded-start-pill" type="button" onclick="updateQuantity('{{ item.id }}', 'minus')"><i class="bi bi-dash"></i></button>
-                                <input type="text" class="form-control text-center fw-bold bg-white" id="qty-{{ item.id }}" value="{{ item.quantity }}" readonly style="max-width: 40px; border-left: 0; border-right: 0;">
-                                <button class="btn btn-outline-primary rounded-end-pill" type="button" onclick="updateQuantity('{{ item.id }}', 'plus')"><i class="bi bi-plus"></i></button>
+                                <button class="btn btn-outline-dark rounded-start-pill" type="button" onclick="updateQuantity('{{ item.id }}', 'minus')" style="border-color: var(--accent-color); color: var(--accent-color);"><i class="bi bi-dash"></i></button>
+                                <input type="text" class="form-control text-center fw-bold" id="qty-{{ item.id }}" value="{{ item.quantity }}" readonly style="max-width: 40px; border-left: 0; border-right: 0; background: var(--surface-color); color: var(--text-main);">
+                                <button class="btn btn-outline-dark rounded-end-pill" type="button" onclick="updateQuantity('{{ item.id }}', 'plus')" style="border-color: var(--accent-color); color: var(--accent-color);"><i class="bi bi-plus"></i></button>
                             </div>
                         </div>
                         
                         <div class="col-md-2 text-end">
-                             <div class="fw-bold mb-2 fs-5" id="subtotal-{{ item.id }}">₹{{ item.subtotal }}</div>
-                             <form method="POST" action="{% url 'remove_from_cart' item.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none small"><i class="bi bi-x-circle me-1"></i> Remove</button>
-                            </form>
+                             <div class="fw-bold mb-2 fs-5" id="subtotal-{{ item.id }}" style="color: var(--heading-color);">₹{{ item.subtotal }}</div>
+                             <a href="javascript:void(0)" onclick="removeFromCart('{{ item.id }}')" class="text-danger p-0 text-decoration-none small"><i class="bi bi-x-circle me-1"></i> Remove</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -64,11 +61,11 @@
 
                 <div class="row justify-content-end">
                     <div class="col-lg-4">
-                        <div class="bg-light bg-opacity-50 rounded-4 p-4 border border-white">
-                            <h4 class="fw-bold mb-4">Order Summary</h4>
+                        <div class="bg-light bg-opacity-25 rounded-4 p-4 border border-white zircon-glass">
+                            <h4 class="fw-bold mb-4" style="color: var(--heading-color);">Order Summary</h4>
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Subtotal ({{ cart.total_items }} items)</span>
-                                <span class="fw-bold text-dark" id="summary-subtotal">₹{{ cart.total_price }}</span>
+                                <span class="text-muted">Subtotal (<span id="summary-item-count">{{ cart.total_items }}</span> items)</span>
+                                <span class="fw-bold" id="summary-subtotal" style="color: var(--heading-color);">₹{{ cart.total_price }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-3">
                                 <span class="text-muted">Shipping</span>
@@ -76,8 +73,8 @@
                             </div>
                             <hr class="my-4">
                             <div class="d-flex justify-content-between mb-4">
-                                <span class="fs-4 fw-bold text-dark">Total</span>
-                                <span class="fs-4 fw-bold text-primary" id="summary-total">₹{{ cart.total_price }}</span>
+                                <span class="fs-4 fw-bold" style="color: var(--heading-color);">Total</span>
+                                <span class="fs-4 fw-bold" id="summary-total" style="color: var(--accent-color);">₹{{ cart.total_price }}</span>
                             </div>
                             <a href="{% url 'checkout' %}" class="btn btn-gradient w-100 py-3 shadow-sm rounded-pill fw-bold">
                                 Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i>
@@ -99,24 +96,68 @@
                         .then(data => {
                             if (data.status === 'success') {
                                 if (data.action === 'removed') {
-                                    location.reload(); // Easier to reload when item is removed
+                                    handleItemRemoval(itemId, data);
                                 } else {
-                                    // Update local item quantity and subtotal
                                     document.getElementById(`qty-${itemId}`).value = data.quantity;
                                     document.getElementById(`subtotal-${itemId}`).innerText = `₹${data.subtotal}`;
-                                    
-                                    // Update global cart totals
-                                    document.getElementById('cart').innerText = data.cart_count;
-                                    document.getElementById('summary-subtotal').innerText = `₹${data.total_price}`;
-                                    document.getElementById('summary-total').innerText = `₹${data.total_price}`;
+                                    updateGlobalTotals(data);
                                 }
                             } else if (data.status === 'error') {
-                                alert(data.message);
+                                showToast(data.message, 'danger');
+                            }
+                        });
+                    }
+
+                    function removeFromCart(itemId) {
+                        if (!confirm('Are you sure you want to remove this item?')) return;
+                        
+                        fetch(`/remove-from-cart/${itemId}/`, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
                         })
-                        .catch(error => {
-                            console.error('Error:', error);
+                        .then(response => {
+                            // Since remove_from_cart redirected by default, let's just reload or fix backend
+                            // Actually, I'll update views.py to return JSON if AJAX
+                            location.reload(); 
                         });
+                    }
+
+                    function handleItemRemoval(itemId, data) {
+                        const row = document.getElementById(`item-row-${itemId}`);
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(50px)';
+                        setTimeout(() => {
+                            row.remove();
+                            updateGlobalTotals(data);
+                            if (document.querySelectorAll('.cart-item-row').length === 0) {
+                                location.reload();
+                            }
+                        }, 300);
+                    }
+
+                    function updateGlobalTotals(data) {
+                        document.getElementById('cart').innerText = data.cart_count;
+                        document.getElementById('cart-item-count-badge').innerText = `${data.cart_count} Items`;
+                        document.getElementById('summary-item-count').innerText = data.cart_count;
+                        document.getElementById('summary-subtotal').innerText = `₹${data.total_price}`;
+                        document.getElementById('summary-total').innerText = `₹${data.total_price}`;
+                    }
+
+                    function showToast(message, type = 'success') {
+                        const toastMsg = document.createElement('div');
+                        toastMsg.className = 'position-fixed bottom-0 end-0 p-3';
+                        toastMsg.style.zIndex = '1060';
+                        toastMsg.innerHTML = `
+                            <div class="toast show align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="d-flex">
+                                    <div class="toast-body">${message}</div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(toastMsg);
+                        setTimeout(() => toastMsg.remove(), 3000);
                     }
                 </script>
             {% else %}

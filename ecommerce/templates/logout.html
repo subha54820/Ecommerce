@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Logout - ShopEasy{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; padding: 120px 20px 60px; background: #ffffff;">
+  <div class="glass-card p-0 overflow-hidden shadow-sm" style="max-width: 450px; width: 100%; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05);">
+
+    <!-- Logout Card -->
+    <div class="auth-form-container p-5" style="background: #ffffff;">
+      {% include "auth_nav.html" %}
+
+      <div class="mb-5 text-center">
+        <h2 class="fw-bold mb-0" style="letter-spacing: -0.5px; color: #000000;">Logout Page</h2>
+      </div>
+
+      {% if request.user.is_authenticated %}
+      <div class="text-center mb-4">
+        <div class="mb-4">
+          <i class="bi bi-person-circle" style="font-size: 3.5rem; color: #D4AF37;"></i>
+        </div>
+        <p class="fw-bold mb-1" style="color: #000; font-size: 1.1rem;">{{ request.user.username }}</p>
+        <p class="text-muted small">You are currently signed in.</p>
+      </div>
+
+      <form action="/auth/logout/" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn w-100 py-3 fw-bold rounded-pill shadow mt-2"
+          style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: #D4AF37; border: 1px solid #D4AF37;">
+          <i class="bi bi-box-arrow-right me-2"></i> Confirm Logout
+        </button>
+      </form>
+
+      <div class="text-center mt-4">
+        <a href="/" class="text-muted small text-decoration-none">
+          <i class="bi bi-arrow-left me-1"></i> Back to Home
+        </a>
+      </div>
+
+      {% else %}
+      <div class="text-center">
+        <i class="bi bi-shield-check" style="font-size: 3rem; color: #28a745;"></i>
+        <p class="mt-3 text-muted">You are already logged out.</p>
+        <a href="/auth/login/" class="btn w-100 py-3 fw-bold rounded-pill mt-2"
+          style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: #D4AF37; border: 1px solid #D4AF37;">
+          <i class="bi bi-box-arrow-in-right me-2"></i> Login
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .input-group-text { border-color: var(--glass-border); }
+  .form-control {
+    background: var(--surface-color);
+    border-color: var(--glass-border);
+    color: var(--text-main);
+  }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: var(--accent-color);
+  }
+</style>
+{% endblock %}

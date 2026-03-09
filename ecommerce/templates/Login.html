@@ -1,74 +1,65 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Login - Secure Access{% endblock %}
 
 {% block content %}
-
-{% comment %} <div class="position-fixed top-0 start-0 w-100 h-100"
-     style="background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); z-index:-1;">
-</div> {% endcomment %}
-
-<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-  <div class="card shadow-lg border-0 px-5 py-4"
-       style="
-         min-width: 400px;
-         max-width: 650px;
-         width: 100%;
-         background: rgba(255, 255, 255, 0.97);
-         border-radius: 28px;
-         box-shadow: 0 8px 64px 0 rgba(52,58,64,0.18), 0 1.5px 4px rgba(90,100,120,0.11);
-       ">
-
-    <h2 class="text-center fw-bold mb-4"
-        style="color: #725ac1; font-size: 2.2rem; letter-spacing: 0.5px;">
-      Login
-    </h2>
-
-    <form action="/auth/login/" method="post" autocomplete="off">
-      {% csrf_token %}
-
-      <div class="mb-4">
-        <label class="form-label fw-semibold" for="username">Name</label>
-        <input type="text"
-               id="username"
-               name="username"
-               class="form-control p-3 shadow-sm"
-               placeholder="Enter your name"
-               style="font-size: 1.1rem; border-radius: 14px;"
-               required>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; padding: 120px 20px 60px; background: #ffffff;">
+  <div class="glass-card p-0 overflow-hidden shadow-sm" style="max-width: 450px; width: 100%; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05);">
+    
+    <!-- Login Form -->
+    <div class="auth-form-container p-5" style="background: #ffffff;">
+      {% include "auth_nav.html" %}
+      
+      <div class="mb-5 text-center">
+        <h2 class="fw-bold mb-0" style="letter-spacing: -0.5px; color: #000000;">Login</h2>
       </div>
 
-      <div class="mb-4">
-        <label class="form-label fw-semibold" for="pass">Password</label>
-        <input type="password"
-               id="pass"
-               name="pass"
-               class="form-control p-3 shadow-sm"
-               placeholder="Enter password"
-               style="font-size: 1.1rem; border-radius: 14px;"
-               required>
-      </div>
+      <form action="/auth/login/" method="post" autocomplete="off">
+        {% csrf_token %}
+        {% if request.GET.next %}
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+        
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-uppercase tracking-wider" style="color: var(--accent-color); font-size: 0.7rem;">Registered Email</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 rounded-start-pill ps-3" style="border-color: rgba(0,0,0,0.1);"><i class="bi bi-envelope text-muted"></i></span>
+            <input type="email" name="username" class="form-control p-3 border-start-0 rounded-end-pill" placeholder="subha@example.com" required style="background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1);">
+          </div>
+        </div>
 
-      <button class="btn w-100 py-3 fw-semibold"
-              style="
-                background: linear-gradient(90deg, #4f8cff, #6f42c1);
-                color: white;
-                font-size: 1.25rem;
-                border-radius: 14px;
-                box-shadow: 0 4px 16px 0 rgba(50,90,250,0.08);
-              ">
-        Login
-      </button>
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-uppercase tracking-wider" style="color: var(--accent-color); font-size: 0.7rem;">Private Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 rounded-start-pill ps-3" style="border-color: rgba(0,0,0,0.1);"><i class="bi bi-lock text-muted"></i></span>
+            <input type="password" name="pass" class="form-control p-3 border-start-0 rounded-end-pill" placeholder="••••••••" required style="background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1);">
+          </div>
+        </div>
 
-      <div class="text-center mt-4">
-        <small class="fw-semibold">
-          New user?
-          <a href="/auth/signup/" style="color:#4f8cff; text-decoration: none;">
-            Signup
-          </a>
-        </small>
-      </div>
-    </form>
+        <button type="submit" class="btn btn-gradient w-100 py-3 fw-bold rounded-pill shadow-lg mt-3" style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: #D4AF37; border: 1px solid #D4AF37;">
+          Unlock Account <i class="bi bi-chevron-right ms-2 small"></i>
+        </button>
+
+        <div class="text-center mt-5 pt-3">
+          <p class="text-muted small">
+            New to ShopEasy? 
+            <a href="/auth/signup/" class="fw-bold text-decoration-none" style="color: var(--accent-color);">Sign Up Here</a>
+          </p>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
+<style>
+  .input-group-text { border-color: var(--glass-border); }
+  .form-control {
+    background: var(--surface-color);
+    border-color: var(--glass-border);
+    color: var(--text-main);
+  }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: var(--accent-color);
+  }
+</style>
 {% endblock %}
