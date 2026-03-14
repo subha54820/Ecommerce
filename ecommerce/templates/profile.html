@@ -70,10 +70,15 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-gradient w-100 py-3 shadow-sm mt-2">
+                        <button type="submit" class="btn btn-gradient w-100 py-3 shadow-sm mt-3">
                             Update Details <i class="bi bi-check-circle ms-2"></i>
                         </button>
                     </form>
+                    <div class="mt-4 border-top border-white-50 pt-4">
+                        <a href="{% url 'handleLogout' %}" class="btn btn-outline-danger w-100 py-3 rounded-pill fw-bold">
+                            Logout Account <i class="bi bi-box-arrow-right ms-2"></i>
+                        </a>
+                    </div>
                     {% else %}
                     <div class="registration-container">
                         <div class="mb-4 text-center">

@@ -58,6 +58,9 @@ def signup(request):
 
 def handleLogin(request):
     if request.user.is_authenticated:
+        next_url = request.GET.get('next')
+        if next_url:
+            return redirect(next_url)
         return redirect('index')
     
     if request.method == "POST":
@@ -94,6 +97,8 @@ def handleLogin(request):
     return render(request, "Login.html")
 
 def handleLogout(request):
-    logout(request)
-    messages.success(request, "You have been logged out successfully.")
-    return redirect('index')
+    if request.method == "POST":
+        logout(request)
+        messages.success(request, "You have been logged out successfully.")
+        return redirect('index')
+    return render(request, "logout.html")

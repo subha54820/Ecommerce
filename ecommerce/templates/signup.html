@@ -13,7 +13,7 @@
         <h2 class="fw-bold mb-0" style="letter-spacing: -0.5px; color: #000000;">Sign Up</h2>
       </div>
 
-      <form action="/auth/signup/" method="post" autocomplete="off">
+      <form action="{% url 'signup' %}" method="post" autocomplete="off">
         {% csrf_token %}
         {% if request.GET.next %}
           <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -58,7 +58,7 @@
         <div class="text-center mt-5 pt-3">
           <p class="text-muted small">
             Already a member? 
-            <a href="/auth/login/" class="fw-bold text-decoration-none" style="color: var(--accent-color);">Login Here</a>
+            <a href="{% url 'handleLogin' %}" class="fw-bold text-decoration-none" style="color: var(--accent-color);">Login Here</a>
           </p>
         </div>
       </form>

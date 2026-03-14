@@ -1,4 +1,89 @@
 
+/* Premium Theme Switch */
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.theme-switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.theme-switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #cbd5e1;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 24px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 24px;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+  background-color: #f8fafc;
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.sun-icon {
+  color: #f59e0b;
+  font-size: 14px;
+  z-index: 1;
+}
+
+.moon-icon {
+  color: #94a3b8;
+  font-size: 14px;
+  z-index: 1;
+}
+
+input:checked + .slider .sun-icon {
+  opacity: 0.2;
+}
+
+input:not(:checked) + .slider .moon-icon {
+  opacity: 0.2;
+}
+
 :root {
   /* Fonts */
   --default-font: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -40,7 +125,7 @@
 }
 
 /* Striking Dark Mode Overrides */
-body.dark-mode {
+html.dark-mode, .dark-mode {
   --bg-color-1: #000000 !important;
   --bg-color-2: #020617;
   --bg-color-3: #000000;

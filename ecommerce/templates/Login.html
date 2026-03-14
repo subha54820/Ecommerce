@@ -13,17 +13,17 @@
         <h2 class="fw-bold mb-0" style="letter-spacing: -0.5px; color: #000000;">Login</h2>
       </div>
 
-      <form action="/auth/login/" method="post" autocomplete="off">
+      <form action="{% url 'handleLogin' %}" method="post" autocomplete="off">
         {% csrf_token %}
         {% if request.GET.next %}
           <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% endif %}
         
         <div class="mb-4">
-          <label class="form-label small fw-bold text-uppercase tracking-wider" style="color: var(--accent-color); font-size: 0.7rem;">Registered Email</label>
+          <label class="form-label small fw-bold text-uppercase tracking-wider" style="color: var(--accent-color); font-size: 0.7rem;">Username</label>
           <div class="input-group">
-            <span class="input-group-text bg-transparent border-end-0 rounded-start-pill ps-3" style="border-color: rgba(0,0,0,0.1);"><i class="bi bi-envelope text-muted"></i></span>
-            <input type="email" name="username" class="form-control p-3 border-start-0 rounded-end-pill" placeholder="subha@example.com" required style="background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1);">
+            <span class="input-group-text bg-transparent border-end-0 rounded-start-pill ps-3" style="border-color: rgba(0,0,0,0.1);"><i class="bi bi-person text-muted"></i></span>
+            <input type="text" name="username" class="form-control p-3 border-start-0 rounded-end-pill" placeholder="Your Username" required style="background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1);">
           </div>
         </div>
 
@@ -42,7 +42,7 @@
         <div class="text-center mt-5 pt-3">
           <p class="text-muted small">
             New to ShopEasy? 
-            <a href="/auth/signup/" class="fw-bold text-decoration-none" style="color: var(--accent-color);">Sign Up Here</a>
+            <a href="{% url 'signup' %}" class="fw-bold text-decoration-none" style="color: var(--accent-color);">Sign Up Here</a>
           </p>
         </div>
       </form>

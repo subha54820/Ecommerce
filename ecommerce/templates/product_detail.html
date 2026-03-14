@@ -1,332 +1,481 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}{{ product.name }} - ShopEasy{% endblock title %}
-
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block title %}{{ product.name }}
+- ShopEasy{% endblock title %} {% block content %}
 <style>
-    .product-detail-container {
-        padding-top: 120px;
-        padding-bottom: 80px;
-    }
-    
-    .main-img-container {
-        position: relative;
-        overflow: hidden;
-        border-radius: 15px;
-        cursor: crosshair;
-        background: var(--surface-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 500px;
-    }
-    
-    .main-img-container img {
-        transition: transform 0.1s ease-out;
-        max-width: 100%;
-        max-height: 500px;
-        object-fit: contain;
-    }
-    
-    .thumbnail-img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 12px;
-        cursor: pointer;
-        border: 2px solid var(--glass-border);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: var(--surface-color);
-    }
-    
-    .thumbnail-img:hover, .thumbnail-img.active {
-        border-color: var(--accent-color);
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    
-    .product-info-sticky {
-        position: sticky;
-        top: 100px;
-    }
-    
-    .price-tag {
-        font-size: 3rem;
-        font-weight: 800;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline-block;
-    }
-    
-    .related-product-card {
-        background: var(--glass-card-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        border-radius: 20px;
-        overflow: hidden;
-    }
-    
-    .related-product-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    }
+  .product-detail-container {
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
 
-    body.dark-mode .breadcrumb-item a {
-        color: var(--text-muted);
-    }
-    
-    body.dark-mode .breadcrumb-item.active {
-        color: var(--text-light);
-    }
+  .main-img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    cursor: crosshair;
+    background: var(--surface-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+  }
+
+  .main-img-container img {
+    transition: transform 0.1s ease-out;
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+  }
+
+  .thumbnail-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid var(--glass-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--surface-color);
+  }
+
+  .thumbnail-img:hover,
+  .thumbnail-img.active {
+    border-color: var(--accent-color);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-info-sticky {
+    position: sticky;
+    top: 100px;
+  }
+
+  .price-tag {
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  .related-product-card {
+    background: var(--glass-card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .related-product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  body.dark-mode .breadcrumb-item a {
+    color: var(--text-muted);
+  }
+
+  body.dark-mode .breadcrumb-item.active {
+    color: var(--text-light);
+  }
 </style>
 
 <div class="container product-detail-container">
-    <div class="row g-5">
-        <!-- Product Images -->
-        <div class="col-lg-6">
-            <div class="product-gallery">
-                <div class="glass-card p-3 mb-4">
-                    <div class="main-img-container" id="main-image-container">
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}" id="main-image">
-                        {% else %}
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 500px; border-radius: 15px;">
-                                <i class="bi bi-image text-muted display-1"></i>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                {% if product.images.all %}
-                <div class="d-flex gap-3 overflow-auto pb-2">
-                    <img src="{{ product.image.url }}" class="thumbnail-img active" onclick="changeImage('{{ product.image.url }}', this)">
-                    {% for img in product.images.all %}
-                    <img src="{{ img.image.url }}" class="thumbnail-img" onclick="changeImage('{{ img.image.url }}', this)">
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <!-- Product Details -->
-        <div class="col-lg-6">
-            <div class="product-info-sticky">
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}?filter={{ product.category.name|slugify }}" class="text-decoration-none">{{ product.category.name }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
-                    </ol>
-                </nav>
-                
-                <h1 class="display-5 fw-bold mb-3" style="color: var(--heading-color);">{{ product.name }}</h1>
-                
-                <div class="d-flex align-items-center mb-4">
-                    <div class="price-tag me-4">₹{{ product.price }}</div>
-                    <span class="badge {% if product.stock > 10 %}bg-success-subtle text-success{% elif product.stock > 0 %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-3 py-2">
-                        {% if product.stock > 0 %}{{ product.stock }} In Stock{% else %}Out of Stock{% endif %}
-                    </span>
-                </div>
-                
-                <div class="glass-card p-4 mb-4">
-                    <h5 class="fw-bold mb-3">Product Description</h5>
-                    <p class="text-muted leading-relaxed">
-                        {{ product.description|linebreaks }}
-                    </p>
-                </div>
-                
-                <div class="glass-card p-4 mb-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h6 class="fw-bold mb-3">Quantity</h6>
-                            <div class="input-group" style="width: 140px;">
-                                <button class="btn btn-outline-dark rounded-start-pill" type="button" onclick="changeQty(-1)"><i class="bi bi-dash"></i></button>
-                                <input type="text" id="product-qty" class="form-control text-center fw-bold bg-white" value="1" readonly style="border-left: 0; border-right: 0;">
-                                <button class="btn btn-outline-dark rounded-end-pill" type="button" onclick="changeQty(1)"><i class="bi bi-plus"></i></button>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                            <div class="small text-muted mb-1">Total Price</div>
-                            <div class="h4 fw-bold mb-0" style="color: var(--heading-color);">₹<span id="dynamic-total">{{ product.price }}</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="d-grid gap-3 d-md-flex">
-                    {% if product.stock > 0 %}
-                    <a href="{% url 'add_to_cart' product.id %}" 
-                       onclick="return addToCart(event, '{% url 'add_to_cart' product.id %}', document.getElementById('product-qty').value)" 
-                       class="btn btn-gradient btn-lg flex-grow-1">
-                        <i class="bi bi-cart-plus me-2"></i> Add to Cart
-                    </a>
-                    {% else %}
-                    <button class="btn btn-secondary btn-lg flex-grow-1" disabled>Out of Stock</button>
-                    {% endif %}
-                </div>
-
-                <script>
-                    const unitPrice = {{ product.price }};
-                    const maxStock = {{ product.stock }};
-                    
-                    function changeQty(delta) {
-                        const qtyInput = document.getElementById('product-qty');
-                        const totalSpan = document.getElementById('dynamic-total');
-                        let currentQty = parseInt(qtyInput.value);
-                        
-                        let newQty = currentQty + delta;
-                        if (newQty >= 1 && newQty <= maxStock) {
-                            qtyInput.value = newQty;
-                            totalSpan.innerText = (newQty * unitPrice).toLocaleString();
-                        }
-                    }
-                </script>
-                
-                <div class="mt-5">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-truck fs-4 me-3" style="color: var(--accent-color);"></i>
-                        <div>
-                            <h6 class="mb-0 fw-bold">Free Shipping</h6>
-                            <p class="small text-muted mb-0">On orders over ₹999</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-shield-check fs-4 me-3" style="color: var(--accent-color);"></i>
-                        <div>
-                            <h6 class="mb-0 fw-bold">Secure Payment</h6>
-                            <p class="small text-muted mb-0">100% secure payment processing</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Reviews Section -->
-    <div class="row mt-5 pt-5">
-        <div class="col-lg-7">
-            <h3 class="fw-bold mb-4">Customer Reviews</h3>
-            {% if reviews %}
-                {% for review in reviews %}
-                <div class="glass-card p-4 mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="d-flex align-items-center">
-                            <div class="text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: var(--accent-color);">
-                                {{ review.user.username|slice:":1"|upper }}
-                            </div>
-                            <div>
-                                <h6 class="fw-bold mb-0">{{ review.user.username }}</h6>
-                                <span class="text-muted small">{{ review.created_at|date:"M d, Y" }}</span>
-                            </div>
-                        </div>
-                        <div class="text-warning">
-                            {% for i in "12345" %}
-                                <i class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"></i>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <p class="mb-0 text-muted">{{ review.comment }}</p>
-                </div>
-                {% endfor %}
+  <div class="row g-5">
+    <!-- Product Images -->
+    <div class="col-lg-6">
+      <div class="product-gallery">
+        <div class="glass-card p-3 mb-4">
+          <div class="main-img-container" id="main-image-container">
+            {% if product.image %}
+            <img
+              src="{{ product.image.url }}"
+              alt="{{ product.name }}"
+              id="main-image"
+            />
             {% else %}
-                <div class="glass-card p-5 text-center">
-                    <i class="bi bi-chat-left-dots display-4 text-muted opacity-25 mb-3"></i>
-                    <h5>No reviews yet</h5>
-                    <p class="text-muted">Be the first to share your thoughts on this product!</p>
-                </div>
+            <div
+              class="bg-light d-flex align-items-center justify-content-center"
+              style="height: 500px; border-radius: 15px"
+            >
+              <i class="bi bi-image text-muted display-1"></i>
+            </div>
             {% endif %}
+          </div>
         </div>
-        
-        <div class="col-lg-5">
-            <div class="glass-card p-4 sticky-top" style="top: 100px;">
-                <h4 class="fw-bold mb-4">Write a Review</h4>
-                {% if user.is_authenticated %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Rating</label>
-                        <select name="rating" class="form-select rounded-pill border-0 shadow-sm" required>
-                            <option value="5">5 - Excellent</option>
-                            <option value="4">4 - Very Good</option>
-                            <option value="3">3 - Good</option>
-                            <option value="2">2 - Fair</option>
-                            <option value="1">1 - Poor</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Your Comment</label>
-                        <textarea name="comment" class="form-control rounded-4 border-0 shadow-sm" rows="4" placeholder="Share your experience with this product..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-gradient w-100 py-3 shadow-sm">
-                        Submit Review <i class="bi bi-send ms-2"></i>
-                    </button>
-                </form>
-                {% else %}
-                <div class="text-center py-4">
-                    <p class="text-muted">Please login to write a review.</p>
-                    <a href="{% url 'handleLogin' %}" class="btn btn-outline-primary rounded-pill px-4">Login Now</a>
-                </div>
-                {% endif %}
-            </div>
+
+        {% if product.images.all %}
+        <div class="d-flex gap-3 overflow-auto pb-2">
+          <img
+            src="{{ product.image.url }}"
+            class="thumbnail-img active"
+            onclick="changeImage('{{ product.image.url }}', this)"
+          />
+          {% for img in product.images.all %}
+          <img
+            src="{{ img.image.url }}"
+            class="thumbnail-img"
+            onclick="changeImage('{{ img.image.url }}', this)"
+          />
+          {% endfor %}
         </div>
+        {% endif %}
+      </div>
     </div>
-    
-    <!-- Related Products -->
-    {% if related_products %}
-    <div class="mt-5 pt-5">
-        <h3 class="fw-bold mb-4">You May Also Like</h3>
-        <div class="row g-4">
-            {% for rel in related_products %}
-            <div class="col-md-3">
-                <div class="card h-100 border-0 glass-card related-product-card">
-                    <a href="{% url 'product_detail' rel.id %}" class="text-decoration-none">
-                        <div class="overflow-hidden" style="height: 250px;">
-                            {% if rel.image %}
-                            <img src="{{ rel.image.url }}" class="card-img-top w-100 h-100 object-fit-cover" alt="{{ rel.name }}">
-                            {% endif %}
-                        </div>
-                        <div class="card-body">
-                            <h6 class="text-dark fw-bold mb-1">{{ rel.name }}</h6>
-                            <div class="text-primary fw-bold">₹{{ rel.price }}</div>
-                        </div>
-                    </a>
-                </div>
+
+    <!-- Product Details -->
+    <div class="col-lg-6">
+      <div class="product-info-sticky">
+        <nav aria-label="breadcrumb" class="mb-4">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="{% url 'index' %}" class="text-decoration-none">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a
+                href="{% url 'index' %}?filter={{ product.category.name|slugify }}"
+                class="text-decoration-none"
+                >{{ product.category.name }}</a
+              >
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ product.name }}
+            </li>
+          </ol>
+        </nav>
+
+        <h1 class="display-5 fw-bold mb-3" style="color: var(--heading-color)">
+          {{ product.name }}
+        </h1>
+
+        <div class="d-flex align-items-center mb-4">
+          <div class="price-tag me-4">₹{{ product.price }}</div>
+          <span
+            class="badge {% if product.stock > 10 %}bg-success-subtle text-success{% elif product.stock > 0 %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-3 py-2"
+          >
+            {% if product.stock > 0 %}{{ product.stock }} In Stock{% else %}Out
+            of Stock{% endif %}
+          </span>
+        </div>
+
+        <div class="glass-card p-4 mb-4">
+          <h5 class="fw-bold mb-3">Product Description</h5>
+          <p class="text-muted leading-relaxed">
+            {{ product.description|linebreaks }}
+          </p>
+        </div>
+
+        <div class="glass-card p-4 mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h6 class="fw-bold mb-3">Quantity</h6>
+              <div class="input-group" style="width: 140px">
+                <button
+                  class="btn btn-outline-dark rounded-start-pill"
+                  type="button"
+                  onclick="changeQty(-1)"
+                >
+                  <i class="bi bi-dash"></i>
+                </button>
+                <input
+                  type="text"
+                  id="product-qty"
+                  class="form-control text-center fw-bold bg-white"
+                  value="1"
+                  readonly
+                  style="border-left: 0; border-right: 0"
+                />
+                <button
+                  class="btn btn-outline-dark rounded-end-pill"
+                  type="button"
+                  onclick="changeQty(1)"
+                >
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
             </div>
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+              <div class="small text-muted mb-1">Total Price</div>
+              <div class="h4 fw-bold mb-0" style="color: var(--heading-color)">
+                ₹<span id="dynamic-total">{{ product.price }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid gap-3 gap-md-4 d-md-flex">
+          {% if product.stock > 0 %}
+          <a
+            href="{% url 'add_to_cart' product.id %}"
+            onclick="return addToCart(event, '{% url 'add_to_cart' product.id %}', document.getElementById('product-qty').value)"
+            class="btn btn-gradient btn-lg flex-md-grow-1"
+            style="flex: 1.5"
+          >
+            <i class="bi bi-cart-plus me-2"></i> Add to Cart
+          </a>
+          {% else %}
+          <button
+            class="btn btn-secondary btn-lg flex-md-grow-1"
+            disabled
+            style="flex: 1.5"
+          >
+            Out of Stock
+          </button>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <a
+            href="{% url 'add_to_wishlist' product.id %}"
+            class="btn btn-outline-danger btn-lg wishlist-heart-btn"
+            id="wishlist-btn-{{ product.id }}"
+            title="Wishlist Toggle"
+            data-ajax="true"
+            data-product-id="{{ product.id }}"
+            style="flex: 1"
+          >
+            <i
+              class="bi {% if in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"
+              style="color: #e63946; font-size: 1.2rem"
+            ></i>
+          </a>
+          {% endif %}
+        </div>
+
+        <script>
+          const unitPrice = {{ product.price }};
+          const maxStock = {{ product.stock }};
+
+          // Wishlist AJAX Toggle
+          document.addEventListener('DOMContentLoaded', function() {
+            const wishlistBtn = document.querySelector('.wishlist-heart-btn');
+            if (wishlistBtn) {
+              wishlistBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('href');
+                const icon = this.querySelector('i');
+                
+                fetch(url, {
+                  headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                  },
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.status === 'success') {
+                    // Toggle heart icon
+                    if (data.action === 'added') {
+                      icon.classList.remove('bi-heart');
+                      icon.classList.add('bi-heart-fill');
+                    } else {
+                      icon.classList.remove('bi-heart-fill');
+                      icon.classList.add('bi-heart');
+                    }
+                    
+                    // Update navbar count
+                    const countBadge = document.getElementById('wishlist-count');
+                    if (countBadge) {
+                      countBadge.textContent = data.wishlist_count;
+                    }
+                  }
+                })
+                .catch(error => console.error('Error:', error));
+              });
+            }
+          });
+
+          function changeQty(delta) {
+              const qtyInput = document.getElementById('product-qty');
+              const totalSpan = document.getElementById('dynamic-total');
+              let currentQty = parseInt(qtyInput.value);
+
+              let newQty = currentQty + delta;
+              if (newQty >= 1 && newQty <= maxStock) {
+                  qtyInput.value = newQty;
+                  totalSpan.innerText = (newQty * unitPrice).toLocaleString();
+              }
+          }
+        </script>
+
+        <div class="mt-5">
+          <div class="d-flex align-items-center mb-3">
+            <i
+              class="bi bi-truck fs-4 me-3"
+              style="color: var(--accent-color)"
+            ></i>
+            <div>
+              <h6 class="mb-0 fw-bold">Free Shipping</h6>
+              <p class="small text-muted mb-0">On orders over ₹999</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <i
+              class="bi bi-shield-check fs-4 me-3"
+              style="color: var(--accent-color)"
+            ></i>
+            <div>
+              <h6 class="mb-0 fw-bold">Secure Payment</h6>
+              <p class="small text-muted mb-0">
+                100% secure payment processing
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="row mt-5 pt-5">
+    <div class="col-lg-7">
+      <h3 class="fw-bold mb-4">Customer Reviews</h3>
+      {% if reviews %} {% for review in reviews %}
+      <div class="glass-card p-4 mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center">
+            <div
+              class="text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px; background: var(--accent-color)"
+            >
+              {{ review.user.username|slice:":1"|upper }}
+            </div>
+            <div>
+              <h6 class="fw-bold mb-0">{{ review.user.username }}</h6>
+              <span class="text-muted small"
+                >{{ review.created_at|date:"M d, Y" }}</span
+              >
+            </div>
+          </div>
+          <div class="text-warning">
+            {% for i in "12345" %}
+            <i
+              class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"
+            ></i>
             {% endfor %}
+          </div>
         </div>
+        <p class="mb-0 text-muted">{{ review.comment }}</p>
+      </div>
+      {% endfor %} {% else %}
+      <div class="glass-card p-5 text-center">
+        <i
+          class="bi bi-chat-left-dots display-4 text-muted opacity-25 mb-3"
+        ></i>
+        <h5>No reviews yet</h5>
+        <p class="text-muted">
+          Be the first to share your thoughts on this product!
+        </p>
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
+
+    <div class="col-lg-5">
+      <div class="glass-card p-4 sticky-top" style="top: 100px">
+        <h4 class="fw-bold mb-4">Write a Review</h4>
+        {% if user.is_authenticated %}
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-bold">Rating</label>
+            <select
+              name="rating"
+              class="form-select rounded-pill border-0 shadow-sm"
+              required
+            >
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Very Good</option>
+              <option value="3">3 - Good</option>
+              <option value="2">2 - Fair</option>
+              <option value="1">1 - Poor</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Your Comment</label>
+            <textarea
+              name="comment"
+              class="form-control rounded-4 border-0 shadow-sm"
+              rows="4"
+              placeholder="Share your experience with this product..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-gradient w-100 py-3 shadow-sm">
+            Submit Review <i class="bi bi-send ms-2"></i>
+          </button>
+        </form>
+        {% else %}
+        <div class="text-center py-4">
+          <p class="text-muted">Please login to write a review.</p>
+          <a
+            href="{% url 'handleLogin' %}"
+            class="btn btn-outline-primary rounded-pill px-4"
+            >Login Now</a
+          >
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  {% if related_products %}
+  <div class="mt-5 pt-5">
+    <h3 class="fw-bold mb-4">You May Also Like</h3>
+    <div class="row g-4">
+      {% for rel in related_products %}
+      <div class="col-md-3">
+        <div class="card h-100 border-0 glass-card related-product-card">
+          <a
+            href="{% url 'product_detail' rel.id %}"
+            class="text-decoration-none"
+          >
+            <div class="overflow-hidden" style="height: 250px">
+              {% if rel.image %}
+              <img
+                src="{{ rel.image.url }}"
+                class="card-img-top w-100 h-100 object-fit-cover"
+                alt="{{ rel.name }}"
+              />
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <h6 class="text-dark fw-bold mb-1">{{ rel.name }}</h6>
+              <div class="text-primary fw-bold">₹{{ rel.price }}</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 <script>
-    function changeImage(src, element) {
-        document.getElementById('main-image').src = src;
-        
-        // Update active class
-        document.querySelectorAll('.thumbnail-img').forEach(img => {
-            img.classList.remove('active');
-        });
-        element.classList.add('active');
-    }
+  function changeImage(src, element) {
+    document.getElementById("main-image").src = src;
 
-    // Interactive Zoom effect
-    const container = document.getElementById('main-image-container');
-    const img = document.getElementById('main-image');
-
-    container.addEventListener('mousemove', (e) => {
-        const x = e.clientX - e.target.offsetLeft;
-        const y = e.clientY - e.target.offsetTop;
-
-        img.style.transformOrigin = `${x}px ${y}px`;
-        img.style.transform = "scale(2)";
+    // Update active class
+    document.querySelectorAll(".thumbnail-img").forEach((img) => {
+      img.classList.remove("active");
     });
+    element.classList.add("active");
+  }
 
-    container.addEventListener('mouseleave', () => {
-        img.style.transformOrigin = "center";
-        img.style.transform = "scale(1)";
-    });
+  // Interactive Zoom effect
+  const container = document.getElementById("main-image-container");
+  const img = document.getElementById("main-image");
 
+  container.addEventListener("mousemove", (e) => {
+    const x = e.clientX - e.target.offsetLeft;
+    const y = e.clientY - e.target.offsetTop;
+
+    img.style.transformOrigin = `${x}px ${y}px`;
+    img.style.transform = "scale(2)";
+  });
+
+  container.addEventListener("mouseleave", () => {
+    img.style.transformOrigin = "center";
+    img.style.transform = "scale(1)";
+  });
 </script>
 {% endblock content %}

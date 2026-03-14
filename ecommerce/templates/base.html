@@ -89,6 +89,16 @@
         margin-right: 15px;
       }
 
+      .utility-icon.dropdown-toggle::after {
+        display: none !important;
+      }
+      .dropdown-item:hover {
+        background: var(--accent-gradient) !important;
+        color: white !important;
+      }
+      .dropdown-item:hover i {
+        color: white !important;
+      }
     </style>
 
     <!-- Theme Initialization -->
@@ -96,8 +106,10 @@
       (function() {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
           document.documentElement.classList.add('dark-mode');
-          document.body.classList.add('dark-mode');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
     </script>
@@ -130,16 +142,79 @@
           </div>
 
           <div class="header-utilities">
-            <a href="{% url 'cart' %}" class="utility-icon position-relative" title="Cart">
+            <a href="{% url 'cart' %}" class="utility-icon position-relative" title="Shopping Cart">
               <i class="bi bi-cart3"></i>
               <span id="cart" class="badge rounded-pill cart-badge-ui" style="background: var(--accent-color); color: var(--contrast-color);">{{ cart_count }}</span>
             </a>
-            <a href="/profile" class="utility-icon" title="My Profile">
-              <i class="bi bi-person-circle"></i>
+            <a href="{% url 'wishlist' %}" class="utility-icon position-relative" title="My Wishlist">
+              <i class="bi bi-heart-fill" style="color: #e63946;"></i>
+              <span id="wishlist-count" class="badge rounded-pill cart-badge-ui" style="background: #e63946; color: white; top: -5px; right: -5px;">{{ wishlist_count }}</span>
             </a>
-            <button id="theme-toggle" class="btn btn-link utility-icon p-0 border-0 shadow-none" title="Toggle Theme">
-              <i class="bi bi-moon-stars"></i>
-            </button>
+            <div class="dropdown d-inline-block">
+              <a href="#" class="utility-icon dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="My Account">
+                <i class="bi bi-person-circle"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end glass-card border-0 shadow-lg mt-3" style="border-radius: 15px; min-width: 220px; transition: all 0.3s ease;">
+                {% if user.is_authenticated %}
+                  <li class="px-4 py-3 border-bottom mb-2">
+                    <div class="d-flex align-items-center">
+                      <div class="profile-avatar-small me-3">
+                        {{ user.username|slice:":1"|upper }}
+                      </div>
+                      <div>
+                        <span class="d-block small text-muted">Signed in as</span>
+                        <span class="fw-bold text-dark">{{ user.username }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li><a class="dropdown-item py-2 px-4" href="{% url 'profile' %}"><i class="bi bi-person me-2 text-primary"></i>My Profile</a></li>
+                  <li><a class="dropdown-item py-2 px-4" href="{% url 'order_history' %}"><i class="bi bi-bag-check me-2 text-primary"></i>My Orders</a></li>
+                  <li><a class="dropdown-item py-2 px-4" href="{% url 'wishlist' %}"><i class="bi bi-heart me-2 text-danger"></i>My Wishlist</a></li>
+                  <li><hr class="dropdown-divider mx-3"></li>
+                  <li><a class="dropdown-item py-2 px-4 text-danger" href="{% url 'handleLogout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                {% else %}
+                  <li class="px-4 py-3 border-bottom mb-2">
+                    <span class="fw-bold text-dark">Welcome to ShopEasy</span>
+                    <p class="small text-muted mb-0">Login to access your orders</p>
+                  </li>
+                  <li><a class="dropdown-item py-2 px-4" href="{% url 'handleLogin' %}"><i class="bi bi-box-arrow-in-right me-2 text-primary"></i>Login</a></li>
+                  <li><a class="dropdown-item py-2 px-4" href="{% url 'signup' %}"><i class="bi bi-person-plus me-2 text-primary"></i>Sign Up</a></li>
+                {% endif %}
+              </ul>
+            </div>
+            
+            <style>
+              .profile-avatar-small {
+                width: 35px;
+                height: 35px;
+                background: var(--accent-gradient);
+                color: var(--contrast-color);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 0.9rem;
+              }
+              .dropdown-item {
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: transform 0.2s;
+              }
+              .dropdown-item:hover {
+                transform: translateX(5px);
+              }
+            </style>
+            <!-- Premium Theme Toggle -->
+            <div class="theme-switch-wrapper me-2">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round">
+                  <i class="bi bi-sun-fill sun-icon"></i>
+                  <i class="bi bi-moon-stars-fill moon-icon"></i>
+                </div>
+              </label>
+            </div>
             <i class="bi bi-list mobile-nav-toggle d-lg-none fs-1 ms-2"></i>
           </div>
         </div>
@@ -161,12 +236,20 @@
                 </ul>
               </li>
               <li><a class="nav-link scrollto" href="{% url 'about' %}"><i class="bi bi-info-circle me-2"></i>About Us</a></li>
+              {% if user.is_authenticated %}
+              <li><a class="nav-link scrollto" href="{% url 'wishlist' %}"><i class="bi bi-heart-fill me-2" style="color: #e63946;"></i>My Wishlist</a></li>
+              {% endif %}
               <li class="dropdown">
-                <a href="javascript:void(0)"><span><i class="bi bi-person-lock me-2"></i>Login</span> <i class="bi bi-chevron-down"></i></a>
+                <a href="javascript:void(0)"><span><i class="bi bi-person-lock me-2"></i>Account</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
-                  <li><a href="/auth/login/"><i class="bi bi-box-arrow-in-right me-2 text-muted"></i>Login Page</a></li>
-                  <li><a href="/auth/signup/"><i class="bi bi-person-plus me-2 text-muted"></i>Sign Up Page</a></li>
-                  <li><a href="/auth/logout/"><i class="bi bi-box-arrow-right me-2 text-muted"></i>Logout Page</a></li>
+                  {% if not user.is_authenticated %}
+                  <li><a href="{% url 'handleLogin' %}"><i class="bi bi-box-arrow-in-right me-2 text-muted"></i>Login</a></li>
+                  <li><a href="{% url 'signup' %}"><i class="bi bi-person-plus me-2 text-muted"></i>Sign Up</a></li>
+                  {% else %}
+                  <li><a href="{% url 'profile' %}"><i class="bi bi-person me-2 text-muted"></i>My Profile</a></li>
+                  <li><a href="{% url 'order_history' %}"><i class="bi bi-bag-check me-2 text-muted"></i>My Orders</a></li>
+                  <li><a href="{% url 'handleLogout' %}"><i class="bi bi-box-arrow-right me-2 text-muted"></i>Logout</a></li>
+                  {% endif %}
                 </ul>
               </li>
               <li><a class="nav-link scrollto" href="/contact"><i class="bi bi-envelope me-2"></i>Contact</a></li>
@@ -187,12 +270,18 @@
             </ul>
           </li>
           <li><a class="nav-link scrollto" href="{% url 'about' %}"><i class="bi bi-info-circle me-2"></i>About Us</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'wishlist' %}"><i class="bi bi-heart-fill me-2" style="color: #e63946;"></i>My Wishlist</a></li>
           <li class="dropdown">
-            <a href="javascript:void(0)"><span><i class="bi bi-person-lock me-2"></i>Login</span> <i class="bi bi-chevron-down"></i></a>
+            <a href="javascript:void(0)"><span><i class="bi bi-person-lock me-2"></i>Account</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
-              <li><a href="/auth/login/"><i class="bi bi-box-arrow-in-right me-2"></i>Login Page</a></li>
-              <li><a href="/auth/signup/"><i class="bi bi-person-plus me-2"></i>Sign Up Page</a></li>
-              <li><a href="/auth/logout/"><i class="bi bi-box-arrow-right me-2"></i>Logout Page</a></li>
+              {% if not user.is_authenticated %}
+              <li><a href="{% url 'handleLogin' %}"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a></li>
+              <li><a href="{% url 'signup' %}"><i class="bi bi-person-plus me-2"></i>Sign Up</a></li>
+              {% else %}
+              <li><a href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>My Profile</a></li>
+              <li><a href="{% url 'order_history' %}"><i class="bi bi-bag-check me-2"></i>My Orders</a></li>
+              <li><a href="{% url 'handleLogout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+              {% endif %}
             </ul>
           </li>
           <li><a class="nav-link scrollto" href="/contact"><i class="bi bi-envelope me-2"></i>Contact</a></li>
@@ -390,37 +479,31 @@
             
             return false;
         };
-        // Theme Toggle Logic
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = themeToggle?.querySelector('i');
-        const body = document.body;
+        // Premium Theme Toggle Logic
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const currentTheme = localStorage.getItem('theme');
 
-        if (themeToggle) {
-            // Initial sync of icon and class
-            if (localStorage.getItem('theme') === 'dark') {
-                body.classList.add('dark-mode');
-                if (themeIcon) {
-                    themeIcon.classList.remove('bi-moon-stars');
-                    themeIcon.classList.add('bi-sun');
-                }
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark') {
+                toggleSwitch.checked = true;
+                document.documentElement.classList.add('dark-mode');
             }
-
-            themeToggle.addEventListener('click', function() {
-                body.classList.toggle('dark-mode');
-                const isDark = body.classList.contains('dark-mode');
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                
-                if (themeIcon) {
-                    if (isDark) {
-                        themeIcon.classList.remove('bi-moon-stars');
-                        themeIcon.classList.add('bi-sun');
-                    } else {
-                        themeIcon.classList.remove('bi-sun');
-                        themeIcon.classList.add('bi-moon-stars');
-                    }
-                }
-            });
         }
+
+        function switchTheme(e) {
+            if (e.target.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.documentElement.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.documentElement.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }    
+        }
+
+        toggleSwitch.addEventListener('change', switchTheme, false);
         // Real-time Search Logic
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('search-suggestions');

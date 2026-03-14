@@ -4,23 +4,22 @@
 {% block hero %}{% endblock %}
 
 {% block body %}
-<section class="py-5" style="min-height: 80vh; background: #f8f9fa;">
+<section class="py-5" style="min-height: 80vh; background: #ffffff;">
   <div class="container py-4">
 
-    <div class="d-flex align-items-center mb-5">
-      <h2 class="fw-bold mb-0 me-3" style="color: #000;">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="welcome-badge">Saved for Later</span>
+      <h2 class="display-5 fw-bold mt-2" style="color: #000;">
         <i class="bi bi-heart-fill me-2" style="color: #e63946;"></i> My Wishlist
       </h2>
-      <span class="badge rounded-pill px-3 py-2" style="background: #000; color: #D4AF37; font-size: 0.85rem;">
-        {{ wish_items|length }} item{{ wish_items|length|pluralize }}
-      </span>
+      <p class="text-muted mx-auto" style="max-width: 600px;">Your personal collection of products you love. Add them to your cart anytime or keep them here for later.</p>
     </div>
 
     {% if messages %}
     <div class="mb-4">
       {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-        {{ message }}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm border-0" role="alert" style="background: rgba(0,0,0,0.03);">
+        <i class="bi bi-info-circle me-2"></i> {{ message }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
       {% endfor %}
@@ -28,45 +27,66 @@
     {% endif %}
 
     {% if wish_items %}
-    <div class="row g-4">
+    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
       {% for item in wish_items %}
       <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative" style="transition: transform 0.2s;">
+        <div class="card h-100 border-0 glass-card product-card shadow-sm overflow-hidden position-relative">
           
-          <!-- Remove Button -->
-          <a href="{% url 'remove_from_wishlist' item.product.id %}"
-            class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle shadow-sm"
-            title="Remove from wishlist" style="z-index:2; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
-            <i class="bi bi-x" style="font-size:1rem;"></i>
-          </a>
+          <!-- Remove Button overlay -->
+          <div class="position-absolute top-0 end-0 m-3" style="z-index: 5;">
+            <a href="{% url 'remove_from_wishlist' item.product.id %}"
+              class="wishlist-remove-btn shadow-sm"
+              title="Remove from wishlist"
+              data-ajax="true"
+              data-product-id="{{ item.product.id }}">
+              <i class="bi bi-trash3"></i>
+            </a>
+          </div>
 
           <!-- Product Image -->
-          <a href="{% url 'product_detail' item.product.id %}">
-            {% if item.product.image %}
-            <img src="{{ item.product.image.url }}" class="card-img-top"
-              style="height: 200px; object-fit: cover;" alt="{{ item.product.name }}">
-            {% else %}
-            <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
-              <i class="bi bi-bag" style="font-size:3rem; color:#ccc;"></i>
-            </div>
-            {% endif %}
-          </a>
+          <div class="position-relative overflow-hidden rounded-top-4">
+            <a href="{% url 'product_detail' item.product.id %}">
+              {% if item.product.image %}
+              <div class="product-img-container">
+                 <img src="{{ item.product.image.url }}" class="card-img-top w-100 transition-transform duration-500 hover-scale-110"
+                    style="height: 250px; object-fit: cover;" alt="{{ item.product.name }}">
+              </div>
+              {% else %}
+              <div class="d-flex align-items-center justify-content-center bg-light" style="height:250px;">
+                <i class="bi bi-image text-muted opacity-25 fs-1"></i>
+              </div>
+              {% endif %}
+            </a>
+          </div>
 
-          <div class="card-body d-flex flex-column p-3">
-            <p class="text-muted small mb-1">{{ item.product.category.name }}</p>
-            <h6 class="fw-bold mb-2" style="color:#000;">
+          <div class="card-body text-center d-flex flex-column p-4">
+            <span class="small fw-bold mb-1 text-uppercase tracking-wider" style="color: var(--accent-color);">{{ item.product.category.name }}</span>
+            <h6 class="fw-bold mb-2 text-truncate" style="color:#000;">
               <a href="{% url 'product_detail' item.product.id %}" class="text-decoration-none text-dark">
                 {{ item.product.name }}
               </a>
             </h6>
-            <p class="fw-bold mb-3" style="color: #D4AF37; font-size: 1.1rem;">₹{{ item.product.price }}</p>
             
-            <div class="mt-auto d-flex gap-2">
-              <a href="{% url 'add_to_cart' item.product.id %}"
-                class="btn btn-sm fw-bold flex-grow-1 rounded-pill"
-                style="background: #000; color: #D4AF37; border: 1px solid #D4AF37;">
-                <i class="bi bi-cart-plus me-1"></i> Add to Cart
-              </a>
+            <div class="mt-auto">
+              <div class="text-center mb-3">
+                <p class="fw-bold mb-1" style="color: var(--heading-color); font-size: 1.25rem;">₹{{ item.product.price }}</p>
+                <span class="badge {% if item.product.stock > 0 %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-3 py-1" style="font-size: 10px;">
+                    {% if item.product.stock > 0 %}In Stock{% else %}Out of Stock{% endif %}
+                </span>
+              </div>
+              
+              <div class="d-grid gap-2">
+                {% if item.product.stock > 0 %}
+                <a href="{% url 'add_to_cart' item.product.id %}"
+                  class="btn btn-gradient shadow-sm py-2 fw-bold rounded-pill">
+                  <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                </a>
+                {% else %}
+                <button class="btn btn-secondary shadow-sm py-2 fw-bold rounded-pill" disabled>
+                  <i class="bi bi-x-circle me-2"></i> Out of Stock
+                </button>
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
@@ -74,27 +94,35 @@
       {% endfor %}
     </div>
 
+    <div class="text-center mt-5 pt-4">
+      <a href="/" class="btn btn-outline-dark fw-bold rounded-pill px-5 py-3">
+        <i class="bi bi-arrow-left me-2"></i> Continue Shopping
+      </a>
+    </div>
+
     {% elif not request.user.is_authenticated %}
     <!-- Unauthenticated State -->
-    <div class="text-center py-5 my-5">
-      <i class="bi bi-person-lock" style="font-size: 5rem; color: #e0e0e0;"></i>
-      <h4 class="mt-4 fw-bold" style="color:#333;">Login to View Your Wishlist</h4>
-      <p class="text-muted mb-4">Please log in to save products you love and access them anytime.</p>
-      <a href="/auth/login/?next=/wishlist/" class="btn fw-bold rounded-pill px-5 py-2"
-        style="background: #000; color: #D4AF37; border: 1px solid #D4AF37;">
-        <i class="bi bi-box-arrow-in-right me-2"></i> Login Now
+    <div class="text-center py-5 my-5 glass-card" data-aos="zoom-in">
+      <div class="mb-4">
+        <i class="bi bi-person-lock display-1 opacity-25 text-primary"></i>
+      </div>
+      <h3 class="fw-bold" style="color:#333;">Login to View Your Wishlist</h3>
+      <p class="text-muted mb-4 px-md-5">Join the ShopEasy community to save products you love and simplify your shopping journey.</p>
+      <a href="{% url 'handleLogin' %}?next=/wishlist/" class="btn btn-gradient fw-bold rounded-pill px-5 py-3 shadow-lg">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Login to Your Account
       </a>
     </div>
 
     {% else %}
     <!-- Empty State -->
-    <div class="text-center py-5 my-5">
-      <i class="bi bi-heart" style="font-size: 5rem; color: #e0e0e0;"></i>
-      <h4 class="mt-4 fw-bold" style="color:#333;">Your wishlist is empty</h4>
-      <p class="text-muted mb-4">Save products you love and come back to them anytime.</p>
-      <a href="/" class="btn fw-bold rounded-pill px-5 py-2"
-        style="background: #000; color: #D4AF37; border: 1px solid #D4AF37;">
-        <i class="bi bi-bag me-2"></i> Browse Products
+    <div class="text-center py-5 my-5 glass-card" data-aos="zoom-in">
+      <div class="mb-4">
+        <i class="bi bi-heart display-1 opacity-10" style="color: #e63946;"></i>
+      </div>
+      <h3 class="fw-bold" style="color:#333;">Your wishlist is empty</h3>
+      <p class="text-muted mb-4 px-md-5">Explore our amazing collection and click the heart icon to save products you're interested in.</p>
+      <a href="/" class="btn btn-gradient fw-bold rounded-pill px-5 py-3 shadow-lg">
+        <i class="bi bi-bag me-2"></i> Start Exploring
       </a>
     </div>
     {% endif %}
@@ -103,6 +131,71 @@
 </section>
 
 <style>
-  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important; }
+  .wishlist-remove-btn {
+    width: 36px;
+    height: 36px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    color: #e63946;
+  }
+
+  .wishlist-remove-btn:hover {
+    transform: scale(1.1);
+    background: #e63946;
+    color: white;
+  }
 </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const removeBtns = document.querySelectorAll('.wishlist-remove-btn[data-ajax="true"]');
+      
+      removeBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const url = this.getAttribute('href');
+          const productId = this.getAttribute('data-product-id');
+          // Find the column container (4 levels up: a -> div -> div -> col)
+          const itemCol = this.closest('.col-sm-6');
+          
+          fetch(url, {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              // Smoothly remove item from UI
+              itemCol.style.transition = 'all 0.4s ease';
+              itemCol.style.opacity = '0';
+              itemCol.style.transform = 'scale(0.8)';
+              
+              setTimeout(() => {
+                itemCol.remove();
+                
+                // If wishlist is now empty, reload to show empty state
+                if (document.querySelectorAll('.product-card').length === 0) {
+                  window.location.reload();
+                }
+              }, 400);
+              
+              // Update navbar count
+              const countBadge = document.getElementById('wishlist-count');
+              if (countBadge) {
+                countBadge.textContent = data.wishlist_count;
+              }
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+    });
+  </script>
 {% endblock %}

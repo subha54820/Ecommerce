@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Product, Category, Cart, CartItem, Order, OrderItem, UserProfile
+from .models import Product, Category, Cart, CartItem, Order, OrderItem, UserProfile, Wishlist
 from django.db.models import Sum
 
 def base(request):
@@ -37,6 +37,7 @@ def home(request):
         'products': products,
         'categories': categories,
         'search_query': query,
+        'wishlist_ids': list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)) if request.user.is_authenticated else []
     }
     return render(request, "index.html", context)
 
@@ -114,6 +115,64 @@ def cart_view(request):
         # For now, we can handle session-based cart or just show empty for guest
         # Based on previous implementation, let's assume we want them to login to see their saved cart
         # or we just show an message.
+        return render(request, "cart.html", {'cart': None, 'cart_items': []})
+
+
+# Wishlist Views
+def wishlist_view(request):
+    """Display current user wishlist items."""
+    if request.user.is_authenticated:
+        wish_items = Wishlist.objects.filter(user=request.user)
+    else:
+        wish_items = []
+    context = {'wish_items': wish_items}
+    return render(request, 'wishlist.html', context)
+
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    obj, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+    
+    action = "added"
+    if created:
+        messages.success(request, f"{product.name} added to your wishlist.")
+    else:
+        obj.delete()
+        action = "removed"
+        messages.info(request, f"{product.name} removed from your wishlist.")
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'action': action,
+            'wishlist_count': Wishlist.objects.filter(user=request.user).count(),
+            'message': f"{product.name} {'added to' if action == 'added' else 'removed from'} your wishlist."
+        })
+        
+    return redirect(request.META.get('HTTP_REFERER', 'index'))
+
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    item = Wishlist.objects.filter(user=request.user, product_id=product_id).first()
+    if item:
+        item.delete()
+        messages.success(request, "Item removed from wishlist.")
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'wishlist_count': Wishlist.objects.filter(user=request.user).count(),
+            'message': 'Item removed from wishlist.'
+        })
+    return redirect('wishlist')
+
+
+# Cart View
+def cart_view(request):
+    if not request.user.is_authenticated:
+        messages.info(request, "Your cart is synchronized across devices when you login.")
         return render(request, "cart.html", {'cart': None, 'cart_items': []})
 
     # Get or create cart
@@ -419,16 +478,25 @@ def product_detail(request, product_id):
     reviews = product.reviews.all()
     
     in_cart = False
+    in_wishlist = False
+    wishlist_ids = []
     if request.user.is_authenticated:
         cart_exists = CartItem.objects.filter(cart__user=request.user, product=product).exists()
         if cart_exists:
             in_cart = True
+
+        # gather wishlist ids for this user to render add/remove buttons
+        wishlist_ids = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
+        if product.id in wishlist_ids:
+            in_wishlist = True
             
     context = {
         'product': product,
         'related_products': related_products,
         'reviews': reviews,
         'in_cart': in_cart,
+        'in_wishlist': in_wishlist,
+        'wishlist_ids': wishlist_ids,
     }
     return render(request, "product_detail.html", context)
 

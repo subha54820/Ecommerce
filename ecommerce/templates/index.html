@@ -168,6 +168,31 @@
       color: var(--contrast-color);
       filter: brightness(1.2);
     }
+
+    /* Wishlist Heart Button Style */
+    .wishlist-heart-btn {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .wishlist-heart-btn:hover {
+      transform: scale(1.15);
+      background: #f8f9fa;
+    }
+
+    .wishlist-heart-btn i {
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
   </style>
 
   <div class="minimal-overlay-hero">
@@ -220,47 +245,60 @@
             {% for product in products %}
             <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item isotope-item filter-{{ product.category.name|slugify }} mb-4">
               <div class="card h-100 border-0 glass-card product-card">
-                <div class="position-relative overflow-hidden rounded-top-4">
-                  <a href="{% url 'product_detail' product.id %}">
-                    {% if product.image %}
-                      <div class="product-img-container position-relative overflow-hidden">
-                        <img src="{{ product.image.url }}" class="card-img-top w-100 transition-transform duration-500 hover-scale-110" alt="{{ product.name }}" style="height: 300px; object-fit: cover;">
-                        <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 bg-black/20 opacity-0 hover-opacity-100 transition-opacity"></div>
-                      </div>
-                    {% else %}
-                      <div class="bg-light d-flex align-items-center justify-content-center card-img-top" style="height: 300px;">
-                        <i class="bi bi-image text-muted fs-1 opacity-25"></i>
-                      </div>
-                    {% endif %}
-                  </a>
-                  {% if product.featured %}
-                  <span class="position-absolute top-0 start-0 m-3 welcome-badge" style="padding: 5px 12px; font-size: 10px;">FEATURED</span>
-                  {% endif %}
-                </div>
-                
-                <div class="card-body text-center d-flex flex-column p-4">
-                  <span class="small fw-bold mb-1 text-uppercase tracking-wider" style="color: var(--accent-color);">{{ product.category.name }}</span>
-                  <h5 class="card-title fw-bold mb-2">
-                    <a href="{% url 'product_detail' product.id %}" class="text-decoration-none" style="color: var(--heading-color);">{{ product.name }}</a>
-                  </h5>
-                  <p class="card-text text-muted small mb-4 flex-grow-1">{{ product.description|truncatechars:60 }}</p>
-                  
-                  <div class="mt-auto pt-3 border-top border-white-50">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <span class="fs-4 fw-bold" style="color: var(--heading-color);">₹{{ product.price }}</span>
-                        <span class="badge {% if product.stock > 10 %}bg-success-subtle text-success{% elif product.stock > 0 %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill px-3">
-                            {% if product.stock > 0 %}In Stock{% else %}Out of Stock{% endif %}
-                        </span>
+                  <div class="position-relative overflow-hidden rounded-top-4">
+                    <a href="{% url 'product_detail' product.id %}">
+                      {% if product.image %}
+                        <div class="product-img-container position-relative overflow-hidden">
+                          <img src="{{ product.image.url }}" class="card-img-top w-100 transition-transform duration-500 hover-scale-110" alt="{{ product.name }}" style="height: 300px; object-fit: cover;">
+                          <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 bg-black/20 opacity-0 hover-opacity-100 transition-opacity"></div>
+                        </div>
+                      {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center card-img-top" style="height: 300px;">
+                          <i class="bi bi-image text-muted fs-1 opacity-25"></i>
+                        </div>
+                      {% endif %}
+                    </a>
+                    
+                    <div class="position-absolute top-0 end-0 m-3" style="z-index: 5;">
+                      {% if user.is_authenticated %}
+                        <a href="{% url 'add_to_wishlist' product.id %}" class="wishlist-heart-btn shadow-sm" title="Add to Wishlist" data-ajax="true" data-product-id="{{ product.id }}">
+                          <i class="bi {% if product.id in wishlist_ids %}bi-heart-fill{% else %}bi-heart{% endif %}" style="color: #e63946;"></i>
+                        </a>
+                      {% else %}
+                        <a href="{% url 'handleLogin' %}?next=/" class="wishlist-heart-btn shadow-sm" title="Login to save">
+                          <i class="bi bi-heart"></i>
+                        </a>
+                      {% endif %}
                     </div>
-                    {% if product.stock > 0 %}
-                       <a href="{% url 'add_to_cart' product.id %}" onclick="return addToCart(event, '{% url 'add_to_cart' product.id %}')" class="btn btn-gradient w-100 shadow-sm py-2">
-                        <i class="bi bi-cart-plus me-2"></i> Add to Cart
-                      </a>
-                    {% else %}
-                      <button class="btn btn-secondary w-100 py-2 border-0 opacity-50" disabled>Out of Stock</button>
+
+                    {% if product.featured %}
+                    <span class="position-absolute top-0 start-0 m-3 welcome-badge" style="padding: 5px 12px; font-size: 10px;">FEATURED</span>
                     {% endif %}
                   </div>
-                </div>
+                  
+                  <div class="card-body text-center d-flex flex-column p-4">
+                    <span class="small fw-bold mb-1 text-uppercase tracking-wider" style="color: var(--accent-color);">{{ product.category.name }}</span>
+                    <h5 class="card-title fw-bold mb-2">
+                      <a href="{% url 'product_detail' product.id %}" class="text-decoration-none" style="color: var(--heading-color);">{{ product.name }}</a>
+                    </h5>
+                    
+                    <div class="mt-auto pt-3">
+                      <div class="d-flex align-items-center justify-content-center mb-3">
+                          <span class="fs-4 fw-bold" style="color: var(--heading-color);">₹{{ product.price }}</span>
+                      </div>
+                      <div class="d-grid gap-2">
+                        {% if product.stock > 0 %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-gradient shadow-sm py-2 fw-bold rounded-pill">
+                          <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                        </a>
+                        {% else %}
+                        <button class="btn btn-secondary shadow-sm py-2 fw-bold rounded-pill" disabled>
+                          <i class="bi bi-x-circle me-2"></i> Out of Stock
+                        </button>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
               </div>
             </div><!-- End Product Item -->
             {% empty %}
@@ -323,6 +361,44 @@
             }
           }, 500);
         }
+      });
+
+      // Wishlist AJAX Toggle
+      const wishlistBtns = document.querySelectorAll('.wishlist-heart-btn[data-ajax="true"]');
+      
+      wishlistBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const url = this.getAttribute('href');
+          const icon = this.querySelector('i');
+          
+          fetch(url, {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'X-CSRFToken': '{{ csrf_token }}'
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              // Toggle heart icon
+              if (data.action === 'added') {
+                icon.classList.remove('bi-heart');
+                icon.classList.add('bi-heart-fill');
+              } else {
+                icon.classList.remove('bi-heart-fill');
+                icon.classList.add('bi-heart');
+              }
+              
+              // Update navbar count
+              const countBadge = document.getElementById('wishlist-count');
+              if (countBadge) {
+                countBadge.textContent = data.wishlist_count;
+              }
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
       });
     </script>
 {% endblock body %}
