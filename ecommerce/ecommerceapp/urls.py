@@ -28,4 +28,6 @@ urlpatterns = [
     path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('wishlist/remove/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     path('search-suggestions/', views.search_suggestions, name="search_suggestions"),
+    path('chatbot-query/', views.chatbot_query, name="chatbot_query"),
+    path('try-on/', views.try_on, name="try_on"),
 ]

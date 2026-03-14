@@ -238,6 +238,13 @@
             ></i>
           </a>
           {% endif %}
+          <a
+            href="{% url 'try_on' %}?product_id={{ product.id }}"
+            class="btn btn-outline-dark btn-lg"
+            style="flex: 1.2"
+          >
+            <i class="bi bi-person-bounding-box me-2"></i> Try On
+          </a>
         </div>
 
         <script>
