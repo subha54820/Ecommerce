@@ -13,17 +13,29 @@
         position: relative;
         width: 100%;
         height: 600px;
-        background: #000;
+        background: #1e293b;
+        background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 80%);
         border-radius: 30px;
         overflow: hidden;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         border: 4px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .mirror-placeholder-icon {
+        font-size: 80px;
+        color: rgba(255,255,255,0.2);
+        z-index: 1;
     }
     .user-image-preview {
+        position: absolute;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.6;
+        opacity: 0;
+        z-index: 2;
+        transition: opacity 0.5s ease;
     }
     .product-overlay {
         position: absolute;
@@ -84,7 +96,8 @@
             <!-- Digital Mirror Area -->
             <div class="col-lg-8">
                 <div class="digital-mirror" id="mirror">
-                    <img src="{% static 'assets/img/user-placeholder.jpg' %}" id="user-upload-preview" class="user-image-preview" alt="User Photo">
+                    <i class="bi bi-person-bounding-box mirror-placeholder-icon" id="placeholder-icon"></i>
+                    <img src="" id="user-upload-preview" class="user-image-preview" alt="User Photo">
                     
                     {% if product %}
                     <img src="{{ product.image.url }}" id="product-overlay-img" class="product-overlay" alt="Product Overlay">
@@ -164,8 +177,10 @@
             const reader = new FileReader();
             reader.onload = function(event) {
                 const preview = document.getElementById('user-upload-preview');
+                const icon = document.getElementById('placeholder-icon');
                 preview.src = event.target.result;
                 preview.style.opacity = '1';
+                if(icon) icon.style.display = 'none';
                 document.getElementById('mirror').style.background = 'transparent';
             }
             reader.readAsDataURL(e.target.files[0]);
