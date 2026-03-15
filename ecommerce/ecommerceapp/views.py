@@ -521,63 +521,6 @@ def search_suggestions(request):
         })
     
     return JsonResponse({'suggestions': suggestions})
-@csrf_exempt
-def chatbot_query(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            user_message = data.get('message', '')
-
-            # Fetch product catalog for context
-            products = Product.objects.all()[:15] # Limit context size
-            catalog_text = "Check out our current collections:\n"
-            for p in products:
-                catalog_text += f"- {p.name}: ${p.price} ({p.category.name})\n"
-
-            # Grok API setup
-            # NOTE: Ideally these should be in settings.py or environment variables
-            api_key = getattr(settings, 'GROK_API_KEY', 'xai-placeholder-key') 
-            url = "https://api.x.ai/v1/chat/completions"
-
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {api_key}"
-            }
-
-            payload = {
-                "model": "grok-beta", # Adjust model name as per x.ai docs
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": f"You are a helpful and stylish fashion assistant for ShopEasy ecommerce. Use the following catalog context to recommend products: {catalog_text}. Be concise, friendly, and act like a fashion expert."
-                    },
-                    {
-                        "role": "user",
-                        "content": user_message
-                    }
-                ],
-                "temperature": 0.7
-            }
-
-            response = requests.post(url, headers=headers, json=payload, timeout=10)
-            
-            if response.status_code == 200:
-                bot_response = response.json()['choices'][0]['message']['content']
-            else:
-                # Fallback for demo if API fails/no key
-                if user_message.lower().find("party") != -1:
-                    bot_response = "For a party, I'd highly recommend our featured dresses! They are elegant and designed to make you stand out. Check our 'Product' category for the latest arrivals."
-                else:
-                    bot_response = "That's a great question! Based on our catalog, we have some fantastic options in shoes and casual wear that would suit your style. Anything specific you're looking for?"
-
-            return JsonResponse({'response': bot_response})
-
-        except Exception as e:
-            return JsonResponse({'response': "I am having some trouble processing your request. Please try again later."}, status=500)
-
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-
 def try_on(request):
     product_id = request.GET.get('product_id')
     product = None

@@ -100,118 +100,8 @@
         color: white !important;
       }
 
-      /* Chatbot Premium UI */
-      .chatbot-bubble {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 60px;
-        height: 60px;
-        background: var(--accent-gradient);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        z-index: 1050;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-      .chatbot-bubble:hover {
-        transform: scale(1.1) rotate(5deg);
-      }
-      .chat-window {
-        position: fixed;
-        bottom: 100px;
-        right: 30px;
-        width: 380px;
-        height: 500px;
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--glass-border);
-        border-radius: 24px;
-        display: flex;
-        flex-direction: column;
-        z-index: 1050;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        overflow: hidden;
-        transition: all 0.3s ease;
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-        pointer-events: none;
-      }
-      .chat-window.active {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        pointer-events: all;
-      }
-      .chat-header {
-        padding: 20px;
-        background: var(--accent-gradient);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .chat-body {
-        flex-grow: 1;
-        padding: 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-      }
-      .chat-message {
-        padding: 12px 16px;
-        border-radius: 18px;
-        max-width: 85%;
-        font-size: 0.9rem;
-        line-height: 1.4;
-      }
-      .message-bot {
-        align-self: flex-start;
-        background: white;
-        color: #333;
-        border-bottom-left-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      }
-      .message-user {
-        align-self: flex-end;
-        background: #000;
-        color: #D4AF37;
-        border-bottom-right-radius: 4px;
-      }
-      .chat-footer {
-        padding: 15px;
-        border-top: 1px solid var(--glass-border);
-        display: flex;
-        gap: 10px;
-      }
-      .chat-input {
-        flex-grow: 1;
-        border: none;
-        background: rgba(0,0,0,0.05);
-        border-radius: 50px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        outline: none;
-      }
     </style>
 
-    <!-- Theme Initialization -->
-    <script>
-      (function() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          document.documentElement.classList.add('dark-mode');
-        } else {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      })();
-    </script>
   </head>
 
   <body>
@@ -304,16 +194,6 @@
                 transform: translateX(5px);
               }
             </style>
-            <!-- Premium Theme Toggle -->
-            <div class="theme-switch-wrapper me-2">
-              <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider round">
-                  <i class="bi bi-sun-fill sun-icon"></i>
-                  <i class="bi bi-moon-stars-fill moon-icon"></i>
-                </div>
-              </label>
-            </div>
             <i class="bi bi-list mobile-nav-toggle d-lg-none fs-1 ms-2"></i>
           </div>
         </div>
@@ -391,7 +271,7 @@
 
     {% block hero %}
     <!-- ======= Hero Section ======= -->
-    <section id="hero" class="hero section dark-background">
+    <section id="hero" class="hero section">
       <img
         src="{% static 'assets/img/hero-bg.jpg' %}"
         alt=""
@@ -467,31 +347,6 @@
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- AI Chatbot UI -->
-  <div class="chatbot-bubble" id="chat-bubble">
-    <i class="bi bi-robot"></i>
-  </div>
-  <div class="chat-window" id="chat-window">
-    <div class="chat-header">
-      <div class="d-flex align-items-center">
-        <i class="bi bi-stars me-2"></i>
-        <h6 class="mb-0 fw-bold">AI Style Assistant</h6>
-      </div>
-      <i class="bi bi-xl-lg cursor-pointer" id="close-chat" style="cursor:pointer;"></i>
-    </div>
-    <div class="chat-body" id="chat-body">
-      <div class="chat-message message-bot">
-        Hello! I'm your ShopEasy Fashion Assistant. How can I help you pick the perfect outfit today? ✨
-      </div>
-    </div>
-    <div class="chat-footer">
-      <input type="text" class="chat-input" id="chat-input" placeholder="Ask about styles or products...">
-      <button class="btn btn-dark rounded-circle p-0" id="send-chat" style="width: 40px; height: 40px;">
-        <i class="bi bi-send-fill" style="font-size: 0.8rem;"></i>
-      </button>
-    </div>
-  </div>
 
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -603,31 +458,6 @@
             
             return false;
         };
-        // Premium Theme Toggle Logic
-        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-        const currentTheme = localStorage.getItem('theme');
-
-        if (currentTheme) {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            if (currentTheme === 'dark') {
-                toggleSwitch.checked = true;
-                document.documentElement.classList.add('dark-mode');
-            }
-        }
-
-        function switchTheme(e) {
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                document.documentElement.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                document.documentElement.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }    
-        }
-
-        toggleSwitch.addEventListener('change', switchTheme, false);
         // Real-time Search Logic
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('search-suggestions');
@@ -676,62 +506,6 @@
             });
         }
 
-        // AI Chatbot Frontend Logic
-        const chatBubble = document.getElementById('chat-bubble');
-        const chatWindow = document.getElementById('chat-window');
-        const closeChat = document.getElementById('close-chat');
-        const chatInput = document.getElementById('chat-input');
-        const sendBtn = document.getElementById('send-chat');
-        const chatBody = document.getElementById('chat-body');
-
-        if (chatBubble) {
-            chatBubble.addEventListener('click', () => chatWindow.classList.toggle('active'));
-            closeChat.addEventListener('click', () => chatWindow.classList.remove('active'));
-
-            const appendMessage = (text, sender) => {
-                const msg = document.createElement('div');
-                msg.className = `chat-message message-${sender}`;
-                msg.textContent = text;
-                chatBody.appendChild(msg);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            };
-
-            const handleSend = () => {
-                const query = chatInput.value.trim();
-                if (!query) return;
-
-                appendMessage(query, 'user');
-                chatInput.value = '';
-
-                // Typing indicator
-                const typing = document.createElement('div');
-                typing.className = 'chat-message message-bot';
-                typing.textContent = '...';
-                chatBody.appendChild(typing);
-
-                fetch('/chatbot-query/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({ message: query })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    typing.remove();
-                    appendMessage(data.response, 'bot');
-                })
-                .catch(error => {
-                    typing.remove();
-                    appendMessage("Sorry, I'm having trouble thinking right now. Please try again!", 'bot');
-                });
-            };
-
-            sendBtn.addEventListener('click', handleSend);
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleSend();
-            });
         }
     });
 </script>
